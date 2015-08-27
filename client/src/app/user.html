@@ -1,0 +1,38 @@
+<div class="row" data-ng-controller="userCtrl">
+	<h1>Create User</h1>
+  <div class="well">
+    <div>
+      <form class="form-horizontal" name="userForm" novalidate>
+         	<div class="row col-sm-12 form-group">
+				<div class="col-sm-2">
+					<label class="control-label">User ID
+						<span ng-show="userForm.userId.$error.required" class="help-inline" style="color:red"> *</span>
+					</label>
+				</div>
+				<div class="col-sm-4 customized-form-control">
+					<input type="text" class="form-control" name="userId" ng-model="user.userId" required />
+				</div>
+			</div>
+			<div class="row col-sm-12 form-group">
+				<div class="col-sm-2 customized-form-control">
+					<label class="control-label">Username
+						<span ng-show="userForm.username.$error.required" class="help-inline" style="color:red"> *</span>
+					</label>
+				</div>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" name="username" ng-model="user.username" required />
+				</div>
+			</div>
+      		<div class="row col-sm-8 col-sm-offset-3">
+				<div class="form-button-group">
+					<button class="btn btn-primary"  ng-click="submit()">Save</button>
+			
+					<button class="btn btn-primary" ng-click="reset()">Reset</button>
+					
+					<button class="btn btn-primary" ng-click="cancel_view()" >Cancel</button>
+				</div>
+			</div>
+      </form>
+    </div>
+  </div>
+</div>
