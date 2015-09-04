@@ -5,6 +5,7 @@
   "main": "server/server.js",
   "scripts": {
     "test": "lab -t 100",
+    "test-lcov": "lab -t 100 -r lcov | ./node_modules/coveralls/bin/coveralls.js",
     "test-cov-html": "lab -r console -o stdout -r html -o coverage.html",
     "start": "node server/server.js"
   },
@@ -36,6 +37,7 @@
   },
   "devDependencies": {
     "code": "^1.5.0",
+    "coveralls": "^2.11.4",
     "grunt": "^0.4.5",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-run": "^0.4.0",
