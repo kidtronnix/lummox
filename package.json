@@ -16,6 +16,7 @@
     "confidence": "^1.2.0",
     "glue": "^2.2.0",
     "hapi": "^9.0.3",
+    "hapi-auth-jwt2": "^5.0.4",
     "hapi-swagger": "^1.2.0",
     "inert": "^3.0.1",
     "joi": "^5.1.0",
