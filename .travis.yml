@@ -6,4 +6,4 @@ node_js:
 services:
   - mongodb
 
-script: npm run test-lcov
+script: npm test && npm run test-lcov
