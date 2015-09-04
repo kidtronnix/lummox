@@ -417,8 +417,8 @@
       <div class="stats terrible">
           <div class="failures">1</div>
           <div class="skipped">0</div>
-          <div class="test-count">8</div>
-          <div class="duration">5459</div>
+          <div class="test-count">16</div>
+          <div class="duration">502</div>
       </div>
       <div id="filters">
           <input type="checkbox" checked="" onchange="filter(this)" value="success" id="show-success"><label for="show-success">Show Success</label></input>
@@ -427,6 +427,9 @@
           <input type="checkbox" checked="" onchange="filter(this)" value="Manifest" id="show-Manifest"><label for="show-Manifest">Manifest</label></input>
           <input type="checkbox" checked="" onchange="filter(this)" value="Static_controller" id="show-Static_controller"><label for="show-Static_controller">Static controller</label></input>
           <input type="checkbox" checked="" onchange="filter(this)" value="User_controller" id="show-User_controller"><label for="show-User_controller">User controller</label></input>
+          <input type="checkbox" checked="" onchange="filter(this)" value="getAll()" id="show-getAll()"><label for="show-getAll()">getAll()</label></input>
+          <input type="checkbox" checked="" onchange="filter(this)" value="getOne()" id="show-getOne()"><label for="show-getOne()">getOne()</label></input>
+          <input type="checkbox" checked="" onchange="filter(this)" value="create()" id="show-create()"><label for="show-create()">create()</label></input>
           <input type="checkbox" checked="" onchange="filter(this)" value="App" id="show-App"><label for="show-App">App</label></input>
           <input type="checkbox" checked="" onchange="filter(this)" value="Routes_file" id="show-Routes_file"><label for="show-Routes_file">Routes file</label></input>
       </div>
@@ -442,58 +445,124 @@
           <tr class="show Config success">
               <td class="test-id">1</td>
               <td class="test-title">Config it gets config data
-                  
+
               </td>
-              <td class="test-duration">15</td>
+              <td class="test-duration">8</td>
           </tr>
           <tr class="show Config success">
               <td class="test-id">2</td>
               <td class="test-title">Config it gets config meta data
-                  
+
               </td>
               <td class="test-duration">2</td>
           </tr>
           <tr class="show Manifest success">
               <td class="test-id">3</td>
               <td class="test-title">Manifest it gets manifest data
-                  
+
               </td>
-              <td class="test-duration">0</td>
+              <td class="test-duration">1</td>
           </tr>
           <tr class="show Manifest success">
               <td class="test-id">4</td>
               <td class="test-title">Manifest it gets manifest meta data
-                  
+
               </td>
-              <td class="test-duration">1</td>
+              <td class="test-duration">0</td>
           </tr>
           <tr class="show Static_controller success">
               <td class="test-id">5</td>
               <td class="test-title">Static controller returns correct static handler object
-                  
+
+              </td>
+              <td class="test-duration">1</td>
+          </tr>
+          <tr class="show User_controller getAll() success">
+              <td class="test-id">6</td>
+              <td class="test-title">User controller getAll() can get all users
+
               </td>
               <td class="test-duration">2</td>
           </tr>
-          <tr class="show User_controller failure">
-              <td class="test-id">6</td>
-              <td class="test-title">User controller can get all users
-                  <div class="stack"></div>
+          <tr class="show User_controller getAll() success">
+              <td class="test-id">7</td>
+              <td class="test-title">User controller getAll() returns 500 on error
+
               </td>
-              <td class="test-duration">0</td>
+              <td class="test-duration">4</td>
+          </tr>
+          <tr class="show User_controller getOne() success">
+              <td class="test-id">8</td>
+              <td class="test-title">User controller getOne() can get a single user
+
+              </td>
+              <td class="test-duration">2</td>
+          </tr>
+          <tr class="show User_controller getOne() success">
+              <td class="test-id">9</td>
+              <td class="test-title">User controller getOne() returns 500 on error
+
+              </td>
+              <td class="test-duration">3</td>
+          </tr>
+          <tr class="show User_controller create() success">
+              <td class="test-id">10</td>
+              <td class="test-title">User controller create() can create a user
+
+              </td>
+              <td class="test-duration">1</td>
+          </tr>
+          <tr class="show User_controller create() success">
+              <td class="test-id">11</td>
+              <td class="test-title">User controller create() returns 500 on error
+
+              </td>
+              <td class="test-duration">2</td>
+          </tr>
+          <tr class="show User_controller create() success">
+              <td class="test-id">12</td>
+              <td class="test-title">User controller create() returns conflict for already taken email
+
+              </td>
+              <td class="test-duration">2</td>
+          </tr>
+          <tr class="show User_controller create() success">
+              <td class="test-id">13</td>
+              <td class="test-title">User controller create() returns conflict for already taken username
+
+              </td>
+              <td class="test-duration">2</td>
+          </tr>
+          <tr class="show User_controller create() failure">
+              <td class="test-id">14</td>
+              <td class="test-title">User controller create() validates good payload
+                  <div class="stack">Error: {
+  &quot;username&quot;: &quot;me&quot;,
+  &quot;email&quot;: &quot;me@email.com&quot;,
+  &quot;password&quot; [31m[1][0m: &quot;password123&quot;
+}
+[31m
+[1] password is not allowed[0m
+    at root.assert (/Users/kidtronnix/Code/user-microservice/node_modules/joi/lib/index.js:121:19)
+    at /Users/kidtronnix/Code/user-microservice/test/server/controllers/user.js:191:13
+    at Immediate._onImmediate (/Users/kidtronnix/Code/user-microservice/node_modules/lab/lib/runner.js:453:17)
+    at processImmediate [as _immediateCallback] (timers.js:358:17)</div>
+              </td>
+              <td class="test-duration">6</td>
           </tr>
           <tr class="show App success">
-              <td class="test-id">7</td>
+              <td class="test-id">15</td>
               <td class="test-title">App it composes a server
-                  
+
               </td>
-              <td class="test-duration">429</td>
+              <td class="test-duration">461</td>
           </tr>
           <tr class="show Routes_file success">
-              <td class="test-id">8</td>
+              <td class="test-id">16</td>
               <td class="test-title">Routes file returns an array of endpoints
-                  
+
               </td>
-              <td class="test-duration">2</td>
+              <td class="test-duration">0</td>
           </tr>
           </tbody>
       </table>
@@ -525,7 +594,7 @@
                 <a href="#server/controllers/static.js"><span class="dirname">server/controllers/</span><span class="basename">static.js</span></a>
             </li>
             <li>
-                <span class="cov medium">59.09</span>
+                <span class="cov high">100</span>
                 <a href="#server/controllers/user.js"><span class="dirname">server/controllers/</span><span class="basename">user.js</span></a>
             </li>
             <li>
@@ -534,10 +603,10 @@
             </li>
         </div>
         <div class="stats high">
-            <div class="percentage">84.55%</div>
-            <div class="sloc">233</div>
-            <div class="hits">197</div>
-            <div class="misses">36</div>
+            <div class="percentage">100%</div>
+            <div class="sloc">192</div>
+            <div class="hits">192</div>
+            <div class="misses">0</div>
         </div>
         <div id="files">
             <div class="file">
@@ -1442,11 +1511,11 @@
             </div>
             <div class="file">
                 <h2 id="server/controllers/user.js">server/controllers/user.js</h2>
-                <div class="stats medium">
-                    <div class="percentage">59.09%</div>
-                    <div class="sloc">88</div>
-                    <div class="hits">52</div>
-                    <div class="misses">36</div>
+                <div class="stats high">
+                    <div class="percentage">100%</div>
+                    <div class="sloc">47</div>
+                    <div class="hits">47</div>
+                    <div class="misses">0</div>
                 </div>
                 <table>
                     <thead>
@@ -1502,36 +1571,36 @@
                             <td class="hits"></td>
                             <td class="source">  handler: function (request, reply) {</td>
                         </tr>
-                            <tr class="miss">
-                                <td class="line">10</td>
-                                <td class="hits"></td>
-                                <td class="source">    var User = UserModel.User;</td>
-                            </tr>
-                            <tr class="miss">
-                                <td class="line">11</td>
-                                <td class="hits"></td>
-                                <td class="source">    User.find({}, function (err, user) {</td>
-                            </tr>
-                            <tr class="miss">
-                                <td class="line">12</td>
-                                <td class="hits"></td>
-                                <td class="source">      if (!err) {</td>
-                            </tr>
-                            <tr class="miss">
-                                <td class="line">13</td>
-                                <td class="hits"></td>
-                                <td class="source">        return reply(user);</td>
-                            </tr>
+                        <tr class="hit">
+                            <td class="line">10</td>
+                            <td class="hits">2</td>
+                            <td class="source">    var User = UserModel.User;</td>
+                        </tr>
+                        <tr class="hit">
+                            <td class="line">11</td>
+                            <td class="hits">2</td>
+                            <td class="source">    User.find({}, function (err, user) {</td>
+                        </tr>
+                        <tr class="hit">
+                            <td class="line">12</td>
+                            <td class="hits">2</td>
+                            <td class="source">      if (!err) {</td>
+                        </tr>
+                        <tr class="hit">
+                            <td class="line">13</td>
+                            <td class="hits">1</td>
+                            <td class="source">        return reply(user);</td>
+                        </tr>
                         <tr class="hit">
                             <td class="line">14</td>
                             <td class="hits"></td>
                             <td class="source">      }</td>
                         </tr>
-                            <tr class="miss">
-                                <td class="line">15</td>
-                                <td class="hits"></td>
-                                <td class="source">      return reply(Boom.badImplementation(err)); // 500 error</td>
-                            </tr>
+                        <tr class="hit">
+                            <td class="line">15</td>
+                            <td class="hits">1</td>
+                            <td class="source">      return reply(Boom.badImplementation(err)); // 500 error</td>
+                        </tr>
                         <tr class="hit">
                             <td class="line">16</td>
                             <td class="hits"></td>
@@ -1562,36 +1631,36 @@
                             <td class="hits"></td>
                             <td class="source">  handler: function (request, reply) {</td>
                         </tr>
-                            <tr class="miss">
-                                <td class="line">22</td>
-                                <td class="hits"></td>
-                                <td class="source">    var User = user.User;</td>
-                            </tr>
-                            <tr class="miss">
-                                <td class="line">23</td>
-                                <td class="hits"></td>
-                                <td class="source">    User.findOne({ &#x27;userId&#x27;: request.params.userId }, function (err, user) {</td>
-                            </tr>
-                            <tr class="miss">
-                                <td class="line">24</td>
-                                <td class="hits"></td>
-                                <td class="source">      if (!err) {</td>
-                            </tr>
-                            <tr class="miss">
-                                <td class="line">25</td>
-                                <td class="hits"></td>
-                                <td class="source">        return reply(user);</td>
-                            </tr>
+                        <tr class="hit">
+                            <td class="line">22</td>
+                            <td class="hits">2</td>
+                            <td class="source">    var User = UserModel.User;</td>
+                        </tr>
+                        <tr class="hit">
+                            <td class="line">23</td>
+                            <td class="hits">2</td>
+                            <td class="source">    User.findOne({ &#x27;userId&#x27;: request.params.userId }, function (err, user) {</td>
+                        </tr>
+                        <tr class="hit">
+                            <td class="line">24</td>
+                            <td class="hits">2</td>
+                            <td class="source">      if (!err) {</td>
+                        </tr>
+                        <tr class="hit">
+                            <td class="line">25</td>
+                            <td class="hits">1</td>
+                            <td class="source">        return reply(user);</td>
+                        </tr>
                         <tr class="hit">
                             <td class="line">26</td>
                             <td class="hits"></td>
                             <td class="source">      }</td>
                         </tr>
-                            <tr class="miss">
-                                <td class="line">27</td>
-                                <td class="hits"></td>
-                                <td class="source">      return reply(Boom.badImplementation(err)); // 500 error</td>
-                            </tr>
+                        <tr class="hit">
+                            <td class="line">27</td>
+                            <td class="hits">1</td>
+                            <td class="source">      return reply(Boom.badImplementation(err)); // 500 error</td>
+                        </tr>
                         <tr class="hit">
                             <td class="line">28</td>
                             <td class="hits"></td>
@@ -1630,12 +1699,12 @@
                         <tr class="hit">
                             <td class="line">35</td>
                             <td class="hits"></td>
-                            <td class="source">      userId   : Joi.string().required(),</td>
+                            <td class="source">      username: Joi.string().required(),</td>
                         </tr>
                         <tr class="hit">
                             <td class="line">36</td>
                             <td class="hits"></td>
-                            <td class="source">      username  : Joi.string().required()</td>
+                            <td class="source">      email: Joi.string().email().required(),</td>
                         </tr>
                         <tr class="hit">
                             <td class="line">37</td>
@@ -1650,58 +1719,58 @@
                         <tr class="hit">
                             <td class="line">39</td>
                             <td class="hits"></td>
-                            <td class="source">  handler: function (request, reply) {</td>
+                            <td class="source">  handler: function(request, reply) {</td>
                         </tr>
-                            <tr class="miss">
-                                <td class="line">40</td>
-                                <td class="hits"></td>
-                                <td class="source">    var User = user.User;</td>
-                            </tr>
-                            <tr class="miss">
-                                <td class="line">41</td>
-                                <td class="hits"></td>
-                                <td class="source">    var usr = new User(request.payload);</td>
-                            </tr>
-                            <tr class="miss">
-                                <td class="line">42</td>
-                                <td class="hits"></td>
-                                <td class="source">    usr.save(function (err, doc) {</td>
-                            </tr>
-                            <tr class="miss">
-                                <td class="line">43</td>
-                                <td class="hits"></td>
-                                <td class="source">      if (!err) {</td>
-                            </tr>
-                            <tr class="miss">
-                                <td class="line">44</td>
-                                <td class="hits"></td>
-                                <td class="source">        return reply(doc).created(&#x27;/user/&#x27; + doc._id); // HTTP 201</td>
-                            </tr>
                         <tr class="hit">
-                            <td class="line">45</td>
+                            <td class="line">40</td>
+                            <td class="hits">4</td>
+                            <td class="source">    var User = UserModel.User;</td>
+                        </tr>
+                        <tr class="hit">
+                            <td class="line">41</td>
+                            <td class="hits">4</td>
+                            <td class="source">    User.save(request.payload, function(err, doc) {</td>
+                        </tr>
+                        <tr class="hit">
+                            <td class="line">42</td>
+                            <td class="hits">4</td>
+                            <td class="source">      if(!err) {</td>
+                        </tr>
+                        <tr class="hit">
+                            <td class="line">43</td>
+                            <td class="hits">1</td>
+                            <td class="source">        return reply(doc);</td>
+                        </tr>
+                        <tr class="hit">
+                            <td class="line">44</td>
                             <td class="hits"></td>
                             <td class="source">      }</td>
                         </tr>
-                            <tr class="miss">
-                                <td class="line">46</td>
-                                <td class="hits"></td>
-                                <td class="source">      if (11000 === err.code || 11001 === err.code) {</td>
-                            </tr>
-                            <tr class="miss">
-                                <td class="line">47</td>
-                                <td class="hits"></td>
-                                <td class="source">        return reply(Boom.forbidden(&quot;please provide another user id, it already exist&quot;));</td>
-                            </tr>
+                        <tr class="hit">
+                            <td class="line">45</td>
+                            <td class="hits">3</td>
+                            <td class="source">      if(err.code === 11000) {</td>
+                        </tr>
+                        <tr class="hit">
+                            <td class="line">46</td>
+                            <td class="hits">2</td>
+                            <td class="source">        var field = err.message.match(/email/g) || err.message.match(/username/g);</td>
+                        </tr>
+                        <tr class="hit">
+                            <td class="line">47</td>
+                            <td class="hits">2</td>
+                            <td class="source">        return reply(Boom.conflict(&#x27;Another user already exists with that &#x27;+field))</td>
+                        </tr>
                         <tr class="hit">
                             <td class="line">48</td>
                             <td class="hits"></td>
                             <td class="source">      }</td>
                         </tr>
-                            <tr class="miss">
-                                <td class="line">49</td>
-                                <td class="hits"></td>
-                                <td class="source">      return reply(Boom.forbidden(err)); // HTTP 403</td>
-                            </tr>
+                        <tr class="hit">
+                            <td class="line">49</td>
+                            <td class="hits">1</td>
+                            <td class="source">      return reply(Boom.badImplementation(err));</td>
+                        </tr>
                         <tr class="hit">
                             <td class="line">50</td>
                             <td class="hits"></td>
@@ -1719,221 +1788,6 @@
                         </tr>
                         <tr class="hit">
                             <td class="line">53</td>
-                            <td class="hits"></td>
-                            <td class="source"></td>
-                        </tr>
-                        <tr class="hit">
-                            <td class="line">54</td>
-                            <td class="hits">1</td>
-                            <td class="source">exports.update = {</td>
-                        </tr>
-                        <tr class="hit">
-                            <td class="line">55</td>
-                            <td class="hits"></td>
-                            <td class="source">  validate: {</td>
-                        </tr>
-                        <tr class="hit">
-                            <td class="line">56</td>
-                            <td class="hits"></td>
-                            <td class="source">    payload: {</td>
-                        </tr>
-                        <tr class="hit">
-                            <td class="line">57</td>
-                            <td class="hits"></td>
-                            <td class="source">      username  : Joi.string().required()</td>
-                        </tr>
-                        <tr class="hit">
-                            <td class="line">58</td>
-                            <td class="hits"></td>
-                            <td class="source">    }</td>
-                        </tr>
-                        <tr class="hit">
-                            <td class="line">59</td>
-                            <td class="hits"></td>
-                            <td class="source">  },</td>
-                        </tr>
-                        <tr class="hit">
-                            <td class="line">60</td>
-                            <td class="hits"></td>
-                            <td class="source">  handler: function (request, reply) {</td>
-                        </tr>
-                            <tr class="miss">
-                                <td class="line">61</td>
-                                <td class="hits"></td>
-                                <td class="source">    var User = user.User;</td>
-                            </tr>
-                            <tr class="miss">
-                                <td class="line">62</td>
-                                <td class="hits"></td>
-                                <td class="source">    User.findOne({ &#x27;userId&#x27;: request.params.userId }, function (err, doc) {</td>
-                            </tr>
-                            <tr class="miss">
-                                <td class="line">63</td>
-                                <td class="hits"></td>
-                                <td class="source">      if (!err) {</td>
-                            </tr>
-                            <tr class="miss">
-                                <td class="line">64</td>
-                                <td class="hits"></td>
-                                <td class="source">        doc.username = request.payload.username;</td>
-                            </tr>
-                            <tr class="miss">
-                                <td class="line">65</td>
-                                <td class="hits"></td>
-                                <td class="source">        doc.save(function (err, user) {</td>
-                            </tr>
-                            <tr class="miss">
-                                <td class="line">66</td>
-                                <td class="hits"></td>
-                                <td class="source">          if (!err) {</td>
-                            </tr>
-                            <tr class="miss">
-                                <td class="line">67</td>
-                                <td class="hits"></td>
-                                <td class="source">            return reply(user); // HTTP 201</td>
-                            </tr>
-                        <tr class="hit">
-                            <td class="line">68</td>
-                            <td class="hits"></td>
-                            <td class="source">          }</td>
-                        </tr>
-                            <tr class="miss">
-                                <td class="line">69</td>
-                                <td class="hits"></td>
-                                <td class="source">          if (11000 === err.code || 11001 === err.code) {</td>
-                            </tr>
-                            <tr class="miss">
-                                <td class="line">70</td>
-                                <td class="hits"></td>
-                                <td class="source">            return reply(Boom.forbidden(&quot;please provide another user id, it already exist&quot;));</td>
-                            </tr>
-                        <tr class="hit">
-                            <td class="line">71</td>
-                            <td class="hits"></td>
-                            <td class="source">          }</td>
-                        </tr>
-                            <tr class="miss">
-                                <td class="line">72</td>
-                                <td class="hits"></td>
-                                <td class="source">          return reply(Boom.forbidden(err)); // HTTP 403</td>
-                            </tr>
-                        <tr class="hit">
-                            <td class="line">73</td>
-                            <td class="hits"></td>
-                            <td class="source">        });</td>
-                        </tr>
-                        <tr class="hit">
-                            <td class="line">74</td>
-                            <td class="hits"></td>
-                            <td class="source">      }</td>
-                        </tr>
-                        <tr class="hit">
-                            <td class="line">75</td>
-                            <td class="hits"></td>
-                            <td class="source">      else{</td>
-                        </tr>
-                            <tr class="miss">
-                                <td class="line">76</td>
-                                <td class="hits"></td>
-                                <td class="source">        return reply(Boom.badImplementation(err)); // 500 error</td>
-                            </tr>
-                        <tr class="hit">
-                            <td class="line">77</td>
-                            <td class="hits"></td>
-                            <td class="source">      }</td>
-                        </tr>
-                        <tr class="hit">
-                            <td class="line">78</td>
-                            <td class="hits"></td>
-                            <td class="source">    });</td>
-                        </tr>
-                        <tr class="hit">
-                            <td class="line">79</td>
-                            <td class="hits"></td>
-                            <td class="source">  }</td>
-                        </tr>
-                        <tr class="hit">
-                            <td class="line">80</td>
-                            <td class="hits"></td>
-                            <td class="source">};</td>
-                        </tr>
-                        <tr class="hit">
-                            <td class="line">81</td>
-                            <td class="hits"></td>
-                            <td class="source"></td>
-                        </tr>
-                        <tr class="hit">
-                            <td class="line">82</td>
-                            <td class="hits">1</td>
-                            <td class="source">exports.remove = {</td>
-                        </tr>
-                        <tr class="hit">
-                            <td class="line">83</td>
-                            <td class="hits"></td>
-                            <td class="source">  handler: function (request, reply) {</td>
-                        </tr>
-                            <tr class="miss">
-                                <td class="line">84</td>
-                                <td class="hits"></td>
-                                <td class="source">    User.findOne({ &#x27;userId&#x27;: request.params.userId }, function (err, doc) {</td>
-                            </tr>
-                            <tr class="miss">
-                                <td class="line">85</td>
-                                <td class="hits"></td>
-                                <td class="source">      if (!err &amp;&amp; user) {</td>
-                            </tr>
-                            <tr class="miss">
-                                <td class="line">86</td>
-                                <td class="hits"></td>
-                                <td class="source">        user.remove();</td>
-                            </tr>
-                            <tr class="miss">
-                                <td class="line">87</td>
-                                <td class="hits"></td>
-                                <td class="source">        return reply({ message: &quot;User deleted successfully&quot;});</td>
-                            </tr>
-                        <tr class="hit">
-                            <td class="line">88</td>
-                            <td class="hits"></td>
-                            <td class="source">      }</td>
-                        </tr>
-                            <tr class="miss">
-                                <td class="line">89</td>
-                                <td class="hits"></td>
-                                <td class="source">      if (!err) {</td>
-                            </tr>
-                            <tr class="miss">
-                                <td class="line">90</td>
-                                <td class="hits"></td>
-                                <td class="source">        return reply(Boom.notFound());</td>
-                            </tr>
-                        <tr class="hit">
-                            <td class="line">91</td>
-                            <td class="hits"></td>
-                            <td class="source">      }</td>
-                        </tr>
-                            <tr class="miss">
-                                <td class="line">92</td>
-                                <td class="hits"></td>
-                                <td class="source">      return reply(Boom.badRequest(&quot;Could not delete user&quot;));</td>
-                            </tr>
-                        <tr class="hit">
-                            <td class="line">93</td>
-                            <td class="hits"></td>
-                            <td class="source">    });</td>
-                        </tr>
-                        <tr class="hit">
-                            <td class="line">94</td>
-                            <td class="hits"></td>
-                            <td class="source">  }</td>
-                        </tr>
-                        <tr class="hit">
-                            <td class="line">95</td>
-                            <td class="hits"></td>
-                            <td class="source">};</td>
-                        </tr>
-                        <tr class="hit">
-                            <td class="line">96</td>
                             <td class="hits"></td>
                             <td class="source"></td>
                         </tr>

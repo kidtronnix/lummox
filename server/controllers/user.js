@@ -19,8 +19,8 @@ exports.getAll = {
 
 exports.getOne = {
   handler: function (request, reply) {
-    var User = user.User;
-    User.findOne({ 'userId': request.params.userId }, function (err, user) {
+    var User = UserModel.User;
+    User.findOne({ _id: request.params.userId }, function (err, user) {
       if (!err) {
         return reply(user);
       }
@@ -32,64 +32,38 @@ exports.getOne = {
 exports.create = {
   validate: {
     payload: {
-      userId   : Joi.string().required(),
-      username  : Joi.string().required()
+      username: Joi.string().required(),
+      email: Joi.string().email().required(),
+      password: Joi.string().min(5).required(),
+      active: Joi.boolean()
     }
   },
-  handler: function (request, reply) {
-    var User = user.User;
-    var usr = new User(request.payload);
-    usr.save(function (err, doc) {
-      if (!err) {
-        return reply(doc).created('/user/' + doc._id); // HTTP 201
+  handler: function(request, reply) {
+    var User = UserModel.User;
+    User.save(request.payload, function(err, doc) {
+      if(!err) {
+        return reply(doc);
       }
-      if (11000 === err.code || 11001 === err.code) {
-        return reply(Boom.forbidden("please provide another user id, it already exist"));
+      if(err.code === 11000) {
+        var field = err.message.match(/email/g) || err.message.match(/username/g);
+        return reply(Boom.conflict('Another user already exists with that '+field))
       }
-      return reply(Boom.forbidden(err)); // HTTP 403
+      return reply(Boom.badImplementation(err));
     });
   }
 };
 
 exports.update = {
-  validate: {
-    payload: {
-      username  : Joi.string().required()
-    }
-  },
-  handler: function (request, reply) {
-    var User = user.User;
-    User.findOne({ 'userId': request.params.userId }, function (err, doc) {
-      if (!err) {
-        doc.username = request.payload.username;
-        doc.save(function (err, user) {
-          if (!err) {
-            return reply(user); // HTTP 201
-          }
-          if (11000 === err.code || 11001 === err.code) {
-            return reply(Boom.forbidden("please provide another user id, it already exist"));
-          }
-          return reply(Boom.forbidden(err)); // HTTP 403
-        });
-      }
-      else{
-        return reply(Boom.badImplementation(err)); // 500 error
-      }
-    });
-  }
-};
-
-exports.remove = {
-  handler: function (request, reply) {
-    User.findOne({ 'userId': request.params.userId }, function (err, doc) {
-      if (!err && user) {
-        user.remove();
-        return reply({ message: "User deleted successfully"});
-      }
-      if (!err) {
-        return reply(Boom.notFound());
-      }
-      return reply(Boom.badRequest("Could not delete user"));
+  handler: function(request, reply) {
+    var User = UserModel.User;
+    User.findOne({ _id: request.params.userId }, function(err, user) {
+      user.username = request.payload.username;
+      user.email = request.payload.email;
+      user.password = request.payload.password;
+      user.active = request.payload.active;
+      user.save(function(err, user) {
+        return reply(user);
+      });
     });
   }
 };
