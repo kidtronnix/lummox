@@ -21,6 +21,9 @@ exports.getAll = {
 };
 
 exports.getOne = {
+  description: 'Get a user',
+  notes: 'Returns an individual user',
+  tags: ['api'],
   handler: function (request, reply) {
     var User = UserModel.User;
     User.findOne({ _id: request.params.userId }, function (err, user) {
@@ -36,12 +39,15 @@ exports.getOne = {
 };
 
 exports.create = {
+  description: 'Create a user',
+  notes: 'Create a single user',
+  tags: ['api'],
   validate: {
     payload: {
-      username: Joi.string().required(),
-      email: Joi.string().email().required(),
-      password: Joi.string().min(5).required(),
-      active: Joi.boolean()
+      username: Joi.string().required().description('A unique username'),
+      email: Joi.string().email().required('A valid email address'),
+      password: Joi.string().min(5).required('A password. Must be at least 5 charachters'),
+      active: Joi.boolean().description('A flag to see if the user is active.')
     }
   },
   handler: function(request, reply) {
@@ -60,6 +66,9 @@ exports.create = {
 };
 
 exports.update = {
+  description: 'Update a user',
+  notes: 'Returns an updated user',
+  tags: ['api'],
   handler: function(request, reply) {
     var User = UserModel.User;
     User.findOne({ _id: request.params.userId }, function(err, user) {
@@ -88,6 +97,9 @@ exports.update = {
 };
 
 exports.delete = {
+  description: 'Remove a user',
+  notes: 'Returns a user deleted message',
+  tags: ['api'],
   handler: function(request, reply) {
       
     var User = UserModel.User;
