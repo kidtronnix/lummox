@@ -1,11 +1,10 @@
 'use strict';
 
 /** load client folder*/
-
 exports.get = {
   handler: {
     directory: {
-      path: '../client/src',
+      path: __dirname+'/../../client/src',
       index: true
     }
   }
