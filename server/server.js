@@ -1,6 +1,6 @@
 var Composer = require('./index');
 var Routes = require('./routes');
-
+var db = require('./config/db');
 
 Composer(function (err, server) {
     if (err) {
@@ -9,7 +9,10 @@ Composer(function (err, server) {
 
     server.route(Routes.endpoints);
 
-    server.start(function () {
-        console.log('Started the auth service:' + server.info.uri);
-    });
+      db.db.once('open', function callback() {
+        console.log("Connection with database succeeded.");
+        server.start(function () {
+          console.log('Started the auth service:' + server.info.uri);
+        });
+      });
 });

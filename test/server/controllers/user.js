@@ -31,6 +31,54 @@ expect.conflict = function (result, msg) {
   expect(result.output.payload.message).to.be.equal(msg);
 }
 
+expect.notFound = function (result) {
+  expect(result).to.be.an.object();
+  expect(result.output.statusCode).to.be.equal(404);
+  expect(result.output.payload.statusCode).to.be.equal(404);
+  expect(result.output.payload.error).to.be.equal('Not Found');
+  expect(result.output.payload.message).to.be.equal('No user found for that id');
+}
+
+var getMockDb = function(err, returnDoc) {
+  var mock_db = {};
+  mock_db[1] = {
+    _id: 1,
+    username: "me",
+    email: "me@email.com",
+    password: "ENCRYPTED",
+    active: true,
+    save: function(cb) {
+      if(err) {
+        return cb(err, null);
+      }
+      if(returnDoc) {
+        var doc = {
+          _id: 1,
+          username: this.username,
+          email: this.email,
+          password: this.password,
+          active: this.active
+        };
+
+        return cb(null, doc);
+      }
+      return cb(null, null);
+    },
+    remove: function(cb) {
+      if(err) {
+        return cb(err, null);
+      }
+      if(returnDoc) {
+        return cb(null, {});
+      }
+      return cb(null, null);
+    }
+
+  }
+
+  return mock_db;
+}
+
 describe('User controller', function () {
     var testUsers = [{
       userId : 'id2',
@@ -40,8 +88,8 @@ describe('User controller', function () {
       username : 'you',
     }];
 
-    describe('getAll()', function () {
-      it('can get all users', function (done) {
+    describe('getAll', function () {
+      it('handler() can get all users', function (done) {
         var request = {};
         var MockUserModel = {
           find: function(query, cb) {
@@ -73,8 +121,8 @@ describe('User controller', function () {
       });
     });
 
-    describe('getOne()', function() {
-      it('can get a single user', function (done) {
+    describe('getOne', function() {
+      it('handler() can get a single user', function (done) {
         var request = { params: { userId: 1 } };
         var MockUserModel = {
           findOne: function(query, cb) {
@@ -105,6 +153,21 @@ describe('User controller', function () {
         UserModel.User = MockUserModel;
         User.getOne.handler(request, function(result) {
           expect.badImplementation(result);
+          done();
+        });
+      });
+
+      
+      it('handler() returns 404 on no user found', function (done) {
+        var request = { params: { userId: 1 } };
+        var MockUserModel = {
+          findOne: function(query, cb) {
+            return cb(null, null);
+          }
+        }
+        UserModel.User = MockUserModel;
+        User.getOne.handler(request, function(result) {
+          expect.notFound(result);
           done();
         });
       });
@@ -204,25 +267,7 @@ describe('User controller', function () {
         };
         var userId = 1;
 
-        var mock_db = {};
-        mock_db[userId] = {
-          _id: userId,
-          username: "me",
-          email: "me@email.com",
-          password: "ENCRYPTED",
-          active: true,
-          save: function(cb) {
-            var doc = {
-              _id: userId,
-              username: this.username,
-              email: this.email,
-              password: this.password,
-              active: this.active
-            };
-            return cb(null, doc);
-          }
-        }
-        
+        var mock_db = getMockDb(null, true);      
 
         var MockUserModel = {
           findOne: function(query, cb) {
@@ -240,13 +285,178 @@ describe('User controller', function () {
           done();
         });
       });
-      // TO DO: add a bunch of error cases
-      // Should handle: 404, 409, 500
+      
+      it('handler() returns 409 doc after username conflict', function(done) {
+        var payload = {
+          username: "new_me",
+          email: "me2@rmail.com",
+          password: "NEW_PASS",
+          active: false
+        };
+        var userId = 1;
+
+        var err = { "code" : 11000,
+		  "message" : "E11000 duplicate key error index: test.boom.$username_1  dup key: { : 1.0 }"
+        };
+
+        var mock_db = getMockDb(err);
+
+        var MockUserModel = {
+          findOne: function(query, cb) {
+            return cb(null, mock_db[query._id]);
+          }
+        }
+
+        UserModel.User = MockUserModel;
+        User.update.handler({ params: { userId: userId }, payload: payload }, function(result) {
+          expect.conflict(result, 'Another user already exists with that username');
+          done();
+        });
+      });
+
+      it('handler() returns 409 doc after email conflict', function(done) {
+        var payload = {
+          username: "new_me",
+          email: "me2@rmail.com",
+          password: "NEW_PASS",
+          active: false
+        };
+        var userId = 1;
+
+        var err = { "code" : 11000,
+          "message" : "E11000 duplicate key error index: test.boom.$email_1  dup key: { : 1.0 }"
+        };
+
+        var mock_db = getMockDb(err); 
+
+        var MockUserModel = {
+          findOne: function(query, cb) {
+            return cb(null, mock_db[query._id]);
+          }
+        }
+
+        UserModel.User = MockUserModel;
+        User.update.handler({ params: { userId: userId }, payload: payload }, function(result) {
+          expect.conflict(result, 'Another user already exists with that email');
+          done();
+        });
+      });
+      it('handler() returns 404 when user not found', function(done) {
+        var MockUserModel = {
+          findOne: function(query, cb) {
+            return cb(null, null);
+          }
+        }
+        UserModel.User = MockUserModel;
+        User.update.handler({ params: { userId: 1 }, payload: {} }, function(result) {
+          expect.notFound(result);
+          done();
+        });
+      });
+      
+      it('handler() returns 500 when error is passed on finding', function(done) {
+        var MockUserModel = {
+          findOne: function(query, cb) {
+            var error = new Error('Something went wrong');
+            return cb(error, null);
+          }
+        }
+        UserModel.User = MockUserModel;
+        User.update.handler({ params: { userId: 1 }, payload: {} }, function(result) {
+          expect.badImplementation(result);
+          done();
+        });
+      });
+      
+      it('handler() returns 500 when error is passed on saving', function(done) {
+        var userId = 1;
+
+        var err = new Error('Something went wrong');
+        var mock_db = getMockDb(err);
+
+        var MockUserModel = {
+          findOne: function(query, cb) {
+            return cb(null, mock_db[query._id]);
+          }
+        }
+
+        UserModel.User = MockUserModel;
+        User.update.handler({ params: { userId: userId }, payload: {} }, function(result) {
+          expect.badImplementation(result);
+          done();
+        });
+      });
     });
     
     describe('delete', function() {
       it('handler() should return successfully deleted on deletion', function(done) {
-        done();
+        var userId = 1;
+
+        var mock_db = getMockDb(null, true);
+
+        var MockUserModel = {
+          findOne: function(query, cb) {
+            return cb(null, mock_db[query._id]);
+          }
+        }
+
+        UserModel.User = MockUserModel;
+        User.delete.handler({ params: { userId: userId }, payload: {} }, function(result) {
+          expect(result).to.be.object();
+          expect(result.message).to.be.equal('User was successfully deleted');
+          done();
+        });
+      });
+
+      it('handler() should return 500 on saving error', function(done) {
+        var userId = 1;
+
+        var mock_db = getMockDb(new Error('Something went wrong'), null);
+
+        var MockUserModel = {
+          findOne: function(query, cb) {
+            return cb(null, mock_db[query._id]);
+          }
+        }
+
+        UserModel.User = MockUserModel;
+        User.delete.handler({ params: { userId: userId }, payload: {} }, function(result) {
+          expect.badImplementation(result);
+          done();
+        });
+      });
+
+      it('handler() should return 500 on findOne error', function(done) {
+        var userId = 1;
+
+        var MockUserModel = {
+          findOne: function(query, cb) {
+            var err = new Error('Something went wrong');
+            return cb(err, null);
+          }
+        }
+
+        UserModel.User = MockUserModel;
+        User.delete.handler({ params: { userId: userId }, payload: {} }, function(result) {
+          expect.badImplementation(result);
+          done();
+        });
+      });
+      
+      it('handler() should return 404 when no user', function(done) {
+        var userId = 1;
+
+        var MockUserModel = {
+          findOne: function(query, cb) {
+            return cb(null, null);
+          }
+        }
+
+        UserModel.User = MockUserModel;
+        User.delete.handler({ params: { userId: userId }, payload: {} }, function(result) {
+          expect.notFound(result);
+          done();
+        });
       });
     });
 });

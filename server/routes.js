@@ -13,5 +13,5 @@ exports.endpoints = [
   { method: 'GET', path: '/users', config: User.getAll},
   { method: 'GET', path: '/users/{userId}', config: User.getOne},
   { method: 'PUT', path: '/users/{userId}', config: User.update},
-  { method: 'DELETE', path: '/users/{userId}', config: User.remove},
+  { method: 'DELETE', path: '/users/{userId}', config: User.delete},
 ];
