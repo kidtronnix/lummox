@@ -12,10 +12,16 @@ A user service designed as a microservice that is responsible for:
 - CRUD of users.
 - Issuing JWT refresh and access tokens.
 
+## What does microservice mean?
+
+Basically, the users for a system can be managed in their own discrete service with thier own seperate db. This makes sense as a db with users details has different needs to a stats db.
 
 ## Features 
 
 - Plug 'n' Play
-- Extendable
+- Extendable. .
 - Customisable user scopes/permissions
 
+## How to Extend?
+
+Other services can be authenticated without need for a db lookup. The Json web tokens used to authenticate with other services enable stateless session.
