@@ -1,7 +1,7 @@
 User Microservice
 ========================
 
-[![Build Status](https://travis-ci.org/smaxwellstewart/user-microservice.svg)](https://travis-ci.org/smaxwellstewart/user-microservice)
+[![Build Status](https://travis-ci.org/smaxwellstewart/lummox.svg?branch=master)](https://travis-ci.org/smaxwellstewart/lummox)
 [![Coverage Status](https://coveralls.io/repos/smaxwellstewart/user-microservice/badge.svg?branch=master&service=github)](https://coveralls.io/github/smaxwellstewart/user-microservice?branch=master)
 
 **version:** (in dev) <br/>
