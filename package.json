@@ -13,6 +13,7 @@
     "node": ">=0.10.22"
   },
   "dependencies": {
+    "bcrypt": "^0.8.5",
     "boom": "^2.6.1",
     "confidence": "^1.2.0",
     "glue": "^2.2.0",
@@ -21,6 +22,7 @@
     "hapi-swagger": "^1.2.0",
     "inert": "^3.0.1",
     "joi": "^5.1.0",
+    "jsonwebtoken": "^5.0.5",
     "mongodb": "^2.0.42",
     "mongoose": "3.8.23",
     "vision": "^3.0.0"

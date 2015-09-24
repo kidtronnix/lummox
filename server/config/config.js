@@ -28,10 +28,12 @@ var config = {
       $filter: 'env',
       production: {
         key: process.env.JWT_SECRET,
+        expiresInMinutes: 15,
         verifyOptions: { algorithms: [ 'HS256' ] }
       },
       $default: {
         key: 'NeverShareYourSecret',
+        expiresInMinutes: 4*60,
         verifyOptions: { algorithms: [ 'HS256' ] }
       },
     },
