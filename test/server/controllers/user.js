@@ -178,13 +178,20 @@ describe('User controller', function () {
 
     describe('create()', function() {
       it('can create a user', function (done) {
-        var request = { params: { userId: 1 } };
-        var user = { _id: 2, username: 'me' };
-        var MockUserModel = {
-          save: function(query, cb) {
-            return cb(null, user);
+        var request = { payload: { username: 'me' } };
+        var MockUserModel = function(user) {
+          return {
+            save: function(cb) {
+              return cb(null);
+            }
           }
         }
+        MockUserModel.findById = function (id, callback) {
+          var user = { _id: 2, username: 'me' };
+          callback(null, user);
+        }
+
+        //console.log(MockUserModel);
         UserModel.User = MockUserModel;
         User.create.handler(request, function(result) {
           expect(result).to.be.an.object();
@@ -195,13 +202,16 @@ describe('User controller', function () {
       });
 
       it('returns 500 on error', function (done) {
-        var request = { params: { userId: 1 } };
+        var request = { payload: { username: 'me' } };
         var err = 'Error in db';
-        var MockUserModel = {
-          save: function(query, cb) {
-            return cb(err, null);
+        var MockUserModel = function(user) {
+          return {
+            save: function(cb) {
+              return cb(err);
+            }
           }
         }
+        
         UserModel.User = MockUserModel;
         User.create.handler(request, function(result) {
           expect.badImplementation(result);
@@ -210,16 +220,19 @@ describe('User controller', function () {
       });
 
       it('returns conflict for already taken email', function (done) {
-        var request = { params: { userId: 1 } };
+        var request = { payload: { username: 'me' } };
         var err = {
           "code" : 11000,
 		      "message" : "E11000 duplicate key error index: test.boom.$email_1  dup key: { : 1.0 }"
         };
-        var MockUserModel = {
-          save: function(query, cb) {
-            return cb(err, null);
+        var MockUserModel = function(user) {
+          return {
+            save: function(cb) {
+              return cb(err);
+            }
           }
         }
+
         UserModel.User = MockUserModel;
         User.create.handler(request, function(result) {
           expect.conflict(result, 'Another user already exists with that email');
@@ -228,19 +241,42 @@ describe('User controller', function () {
       });
 
       it('returns conflict for already taken username', function (done) {
-        var request = { params: { userId: 1 } };
+        var request = { payload: { username: 'me' } };
         var err = {
           "code" : 11000,
 		      "message" : "E11000 duplicate key error index: test.boom.$username_1  dup key: { : 1.0 }"
         };
-        var MockUserModel = {
-          save: function(query, cb) {
-            return cb(err, null);
+        var MockUserModel = function(user) {
+          return {
+            save: function(cb) {
+              return cb(err);
+            }
           }
         }
         UserModel.User = MockUserModel;
         User.create.handler(request, function(result) {
           expect.conflict(result, 'Another user already exists with that username');
+          done();
+        });
+      });
+      
+      it('return bad implentation on error finding user', function (done) {
+        var request = { payload: { username: 'me' } };
+        var MockUserModel = function(user) {
+          return {
+            save: function(cb) {
+              return cb(null);
+            }
+          }
+        }
+        MockUserModel.findById = function (id, callback) {
+          callback(true, null);
+        }
+
+        //console.log(MockUserModel);
+        UserModel.User = MockUserModel;
+        User.create.handler(request, function(result) {
+          expect.badImplementation(result);
           done();
         });
       });

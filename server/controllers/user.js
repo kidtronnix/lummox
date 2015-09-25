@@ -4,17 +4,26 @@ var Joi = require('joi'),
   Boom = require('boom'),
   UserModel = require('../models/user');
 
+var handleError = function(err, callback) {
+  if(err.code === 11000) {
+    var field = err.message.match(/email/g) || err.message.match(/username/g);
+    return callback(Boom.conflict('Another user already exists with that '+field))
+  }
+  return callback(Boom.badImplementation());
+}
 
 exports.getAll = {
   description: 'Get all users',
   notes: 'Returns a list of all system users',
   tags: ['api'],
+  auth: {
+    strategy: 'jwt',
+    scope: ['admin']
+  },
   handler: function (request, reply) {
     var User = UserModel.User;
     User.find({}, function (err, user) {
-      if (err) {
-        return reply(Boom.badImplementation(err));
-      }
+      if (err) return handleError(err, reply);
       return reply(user);
     });
   }
@@ -27,9 +36,7 @@ exports.getOne = {
   handler: function (request, reply) {
     var User = UserModel.User;
     User.findOne({ _id: request.params.userId }, function (err, user) {
-      if (err) {
-        return reply(Boom.badImplementation(err)); // 500 error
-      }
+      if (err) return handleError(err, reply);
       if(!user) {
         return reply(Boom.notFound('No user found for that id'));
       }
@@ -51,16 +58,15 @@ exports.create = {
     }
   },
   handler: function(request, reply) {
-    var User = UserModel.User;
-    User.save(request.payload, function(err, doc) {
-      if(!err) {
+    var payload = request.payload
+    payload.active = true;
+    var u = new UserModel.User(payload);
+    u.save(function(err) {
+      if (err) return handleError(err, reply);
+      UserModel.User.findById(u, function(err, doc) {
+        if (err) return handleError(err, reply);
         return reply(doc);
-      }
-      if(err.code === 11000) {
-        var field = err.message.match(/email/g) || err.message.match(/username/g);
-        return reply(Boom.conflict('Another user already exists with that '+field))
-      }
-      return reply(Boom.badImplementation(err));
+      });
     });
   }
 };
@@ -72,9 +78,7 @@ exports.update = {
   handler: function(request, reply) {
     var User = UserModel.User;
     User.findOne({ _id: request.params.userId }, function(err, user) {
-      if(err) {
-        return reply(Boom.badImplementation(err)); // 500 error
-      }
+      if(err) return handleError(err, reply);
       if(!user) {
         return reply(Boom.notFound('No user found for that id'));
       }
@@ -83,13 +87,7 @@ exports.update = {
       user.password = request.payload.password;
       user.active = request.payload.active;
       user.save(function(err, user) {
-        if(err && err.code === 11000) {
-          var field = err.message.match(/email/g) || err.message.match(/username/g);
-          return reply(Boom.conflict('Another user already exists with that '+field))
-        }
-        if(err) {
-          return reply(Boom.badImplementation());
-        }
+        if (err) return handleError(err, reply);
         return reply(user);
       });
     });
@@ -104,18 +102,16 @@ exports.delete = {
       
     var User = UserModel.User;
     User.findOne({ _id: request.params.userId }, function(err, user) {
-      if(err) {
-        return reply(Boom.badImplementation(err)); // 500 error
-      }
+      if(err) return handleError(err, reply);
       if(!user) {
         return reply(Boom.notFound('No user found for that id'));
       }
       user.remove(function(err, user) {
-        if(err) {
-          return reply(Boom.badImplementation());
-        }
+        if(err) return handleError(err, reply);
         return reply({message: 'User was successfully deleted'});
       });
     });
   }
 }
+
+

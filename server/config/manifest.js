@@ -25,8 +25,12 @@ var manifest = {
     plugins: {
         'inert': {},
         'vision': {},
+        'hapi-swagger': Config.get('/swaggerOptions'),
         'hapi-auth-jwt2': {},
-        'hapi-swagger': Config.get('/swaggerOptions')
+        './auth': {
+          key: Config.get('/jwtAuth/key'),
+          verifyOptions: Config.get('/jwtAuth/verifyOptions')
+        }
     }
 };
 
