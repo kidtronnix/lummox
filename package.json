@@ -1,6 +1,6 @@
 {
-  "name": "jwt-auth-poc",
-  "description": "Hapijs JWT POC",
+  "name": "lummox",
+  "description": "A user microservice.",
   "version": "0.1.0",
   "main": "server/server.js",
   "scripts": {
