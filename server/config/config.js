@@ -16,6 +16,19 @@ var config = {
         test: 9000,
         $default: 8000
     },
+    server: { 
+        debug: {
+          $filter: 'env',
+          production: false,
+          test: false,
+          $default: { request: ['error'] } 
+        },
+        connections: {
+            routes: {
+                security: true
+            }
+        }
+    },
     mongoose: {
       url: {
         $filter: 'env',
@@ -37,6 +50,7 @@ var config = {
         verifyOptions: { algorithms: [ 'HS256' ] }
       },
     },
+    saltRounds: 10,
     swaggerOptions: {
       apiVersion: Package.version,
       documentationPath: '/docs',

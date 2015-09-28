@@ -9,16 +9,7 @@ var criteria = {
 
 var manifest = {
     $meta: 'This file defines the service.',
-    server: {
-        debug: {
-            request: ['error']
-        },
-        connections: {
-            routes: {
-                security: true
-            }
-        }
-    },
+    server: Config.get('/server'),
     connections: [{
         port: Config.get('/port')
     }],
