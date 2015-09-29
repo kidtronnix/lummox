@@ -28,4 +28,15 @@ describe('User model', function () {
     expect(Bcrypt.compareSync('boom123', u.password)).to.equal(true);
     done();
   });
+
+  it('it can check password against bcrypt hash', function (done) {
+    var u = new User({username: 'me', email: 'ME@example.com', password: 'boom123' });
+    expect(u.password).to.not.equal('boom123');
+    expect(u.password).to.be.string();
+    u.checkPassword('boom123', function(err, res) {
+      expect(err).to.not.exist();
+      expect(res).to.be.true();
+      done();
+    });
+  });
 });

@@ -20,6 +20,10 @@ var UserSchema = new Schema({
   active: { type: Boolean, required: true },
 });
 
+UserSchema.methods.checkPassword = function(password, cb) {
+  return Bcrypt.compare(password, this.password, cb);
+}
+
 var user = mongoose.model('user', UserSchema);
 
 module.exports = { User : user };
