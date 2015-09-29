@@ -1,5 +1,4 @@
-lummox
-========================
+![lummox](https://raw.github.com/smaxwellstewart/lummox/master/images/lummox.png)
 
 [![Build Status](https://travis-ci.org/smaxwellstewart/lummox.svg?branch=master)](https://travis-ci.org/smaxwellstewart/lummox)
 [![Coverage Status](https://coveralls.io/repos/smaxwellstewart/user-microservice/badge.svg?branch=master&service=github)](https://coveralls.io/github/smaxwellstewart/user-microservice?branch=master)
