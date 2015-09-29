@@ -50,6 +50,9 @@ var config = {
         verifyOptions: { algorithms: [ 'HS256' ] }
       },
     },
+    auth: {
+      scopes: ['admin']
+    },
     saltRounds: 10,
     swaggerOptions: {
       apiVersion: Package.version,

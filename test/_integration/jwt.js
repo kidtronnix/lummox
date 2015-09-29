@@ -3,6 +3,7 @@ var Lab = require('lab');
 var Composer = require('../../server/index');
 var Routes = require('../../server/routes');
 var db = require('../../server/config/db');
+var User = require('../../server/models/user').User;
 var lab = exports.lab = Lab.script();
 
 // BDD
@@ -30,8 +31,6 @@ describe('lummox', function () {
   
   beforeEach(function(done) {
     db.db.collection('users').drop(function(err) {
-      expect(err).to.not.exist();
-      // TO DO: Add User to db   
       done();
     });
   });
@@ -41,6 +40,27 @@ describe('lummox', function () {
   // });
   
   it('user can perform full auth workflow', function (done) {
-    done();
+    var username = 'me';
+    var password = 'badboy4life';
+    var req = {
+        method: 'POST',
+        url: '/users',
+        payload: { username: username, email: 'me@example.com', password: password, scope: ['admin'], active: true }
+      };
+
+      server.inject(req, function(res) {
+        expect(res.statusCode).to.equal(200);
+        expect(res.headers['content-type']).to.equal('application/json; charset=utf-8');
+        var body = JSON.parse(res.payload);
+        expect(body._id).to.be.a.string();
+        expect(body.username).to.equal('me');
+        expect(body.email).to.equal('me@example.com');
+        expect(body.password).to.not.equal(password);
+        expect(body.password).to.be.string();
+        expect(body.scope).to.be.array();
+        expect(body.scope[0]).to.equal('admin');
+        expect(body.active).to.be.true();
+        done();
+      });
   });
 });
