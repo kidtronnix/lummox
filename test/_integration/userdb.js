@@ -17,24 +17,23 @@ var server;
 
 describe('lummox', function () {
   before(function(done) {
-  
+
     Composer(function (err, srvr) {
       server = srvr;
       expect(err).to.not.exist;
       server.route(Routes.endpoints);
 
       db.db.once('open', function callback() {
-        // console.log("Connection with database succeeded.");
         server.start(function () {
           done();
         });
       });
     });
   });
-  
+
   beforeEach(function(done) {
     db.db.collection('users').drop(function(err) {
-      expect(err).to.not.exist();
+      // expect(err).to.not.exist();
       done();
     });
   });
@@ -57,7 +56,7 @@ describe('lummox', function () {
         done();
       });
   });
-  
+
   it('registers a user', function (done) {
       var req = {
         method: 'POST',
