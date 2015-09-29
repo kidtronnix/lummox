@@ -22,11 +22,8 @@ describe('lummox', function () {
       server = srvr;
       expect(err).to.not.exist;
       server.route(Routes.endpoints);
-
-      db.db.once('open', function callback() {
-        server.start(function () {
-          done();
-        });
+      server.start(function () {
+        done();
       });
     });
   });
