@@ -18,7 +18,7 @@ Basically, the users for a system can be managed in their own discrete service w
 ## Features 
 
 - Plug 'n' Play
-- Extendable. .
+- Extendable
 - Customisable user scopes/permissions
 
 ## How to Extend?
