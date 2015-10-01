@@ -51,7 +51,21 @@ var config = {
       },
     },
     auth: {
-      scopes: ['admin']
+      scopes: ['admin'],
+      getAll: {
+        strategy: 'jwt',
+        scope: ['admin']
+      },
+      getOne: {
+        strategy: 'jwt',
+      },
+      create: false,
+      update: {
+        strategy: 'jwt'
+      },
+      delete: {
+        strategy: 'jwt'
+      }
     },
     saltRounds: 10,
     swaggerOptions: {
@@ -78,12 +92,10 @@ var store = new Confidence.Store(config);
 
 
 exports.get = function (key) {
-
     return store.get(key, criteria);
 };
 
 
 exports.meta = function (key) {
-
     return store.meta(key, criteria);
 };

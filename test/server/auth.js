@@ -29,13 +29,19 @@ describe('Auth plugin', function () {
     }], {}, function (err) {
       expect(err).to.not.exist;
 
-      server.route({
+      server.route([{
         method: 'GET', path: '/restricted',
         config: {
           auth: 'jwt',
           handler: function(request, reply) { return reply({ message: 'Ok' }) }
         }
-      });
+      },{
+        method: 'GET', path: '/tokens/access',
+        config: {
+          auth: 'jwt',
+          handler: function(request, reply) { return reply({ message: 'Ok' }) }
+        }
+      }]);
 
       server.start(function () {
           done();
@@ -108,6 +114,41 @@ describe('Auth plugin', function () {
           message:'Invalid credentials',
           attributes: { error: 'Invalid credentials' }
         }));
+        done();
+      });
+    });
+
+    it('invalidates request using token with refresh scope', function (done) {
+      var req = {
+        method: 'GET',
+        url: '/restricted',
+        headers: {
+          Authorization: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NWQ3YjkwNjIzYzlkOGUwNDgyMWViODEiLCJzY29wZSI6WyJyZWZyZXNoIl0sImlhdCI6MTQ0MDIwMTI0NywiZXhwIjo0MTAyMjcyMDAwfQ.cbR9yHfkl9IGE0DSAnVmz_LEGmi86KsublmiA32NAiQ'
+        }
+      };
+      server.inject(req, function(res) {
+        expect(res.statusCode).to.equal(401);
+        expect(res.payload).to.equal(JSON.stringify({
+          statusCode: 401,
+          error: 'Unauthorized',
+          message:'Invalid credentials',
+          attributes: { error: 'Invalid credentials' }
+        }));
+        done();
+      });
+    });
+
+    it('validates request using token with refresh scope for /tokens/access route', function (done) {
+      var req = {
+        method: 'GET',
+        url: '/tokens/access',
+        headers: {
+          Authorization: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NWQ3YjkwNjIzYzlkOGUwNDgyMWViODEiLCJzY29wZSI6WyJyZWZyZXNoIl0sImlhdCI6MTQ0MDIwMTI0NywiZXhwIjo0MTAyMjcyMDAwfQ.cbR9yHfkl9IGE0DSAnVmz_LEGmi86KsublmiA32NAiQ'
+        }
+      };
+      server.inject(req, function(res) {
+        expect(res.statusCode).to.equal(200);
+        expect(res.payload).to.equal(JSON.stringify({ message: 'Ok'}));
         done();
       });
     });

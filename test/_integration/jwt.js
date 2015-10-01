@@ -4,6 +4,7 @@ var Composer = require('../../server/index');
 var Routes = require('../../server/routes');
 var db = require('../../server/config/db');
 var User = require('../../server/models/user').User;
+var JWT = require('jsonwebtoken');
 var lab = exports.lab = Lab.script();
 
 // BDD
@@ -35,9 +36,24 @@ describe('lummox', function () {
     });
   });
 
-  // it('user can\'t use refesh token to access a protected route', function (done) {
-  //   done();
-  // });
+  it('user can\'t use refesh token to access a protected route', function (done) {
+    var payload = {
+      scope: ['refresh']
+    }
+
+    var opts = { subject: 1 };
+    var token = JWT.sign(payload, 'NeverShareYourSecret', opts);
+    var req = {
+      method: 'GET',
+      url: '/users/1',
+      headers: { Authorization: token }
+    }
+
+    server.inject(req, function(res) {
+      expect(res.statusCode).to.equal(401);
+      done();
+    });
+  });
   
   it('user can perform full auth workflow', function (done) {
     var username = 'me';
@@ -60,7 +76,49 @@ describe('lummox', function () {
         expect(body.scope).to.be.array();
         expect(body.scope[0]).to.equal('admin');
         expect(body.active).to.be.true();
-        done();
+        
+        var req = {
+          method: 'POST',
+          url: '/tokens/refresh',
+          payload: { username: username, password: password }
+        }
+        server.inject(req, function(res) {
+          expect(res.statusCode).to.equal(200);
+          expect(res.headers['content-type']).to.equal('application/json; charset=utf-8');
+          var body = JSON.parse(res.payload);
+          expect(body.token).to.be.a.string();
+          var decoded = JWT.verify(body.token, 'NeverShareYourSecret');
+          expect(decoded.sub).to.be.a.string();
+          expect(decoded.scope).to.be.an.array();
+          expect(decoded.scope[0]).to.equal('refresh');
+
+          var req = {
+            method: 'POST',
+            url: '/tokens/access',
+            headers: { Authorization: body.token }
+          }
+
+          server.inject(req, function(res) {
+            expect(res.statusCode).to.equal(200);
+            var body = JSON.parse(res.payload);
+            expect(body.token).to.be.a.string();
+            var decoded = JWT.verify(body.token, 'NeverShareYourSecret');
+            expect(decoded.sub).to.be.a.string();
+            expect(decoded.scope).to.be.an.array();
+            expect(decoded.scope[0]).to.equal('admin');
+            
+            var req = {
+              method: 'GET',
+              url: '/users',
+              headers: { Authorization: body.token }
+            }
+
+            server.inject(req, function(res) {
+              expect(res.statusCode).to.equal(200);
+              done();
+            });
+          });
+        });
       });
   });
 });

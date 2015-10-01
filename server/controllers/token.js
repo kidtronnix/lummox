@@ -17,7 +17,7 @@ exports.refresh = {
         if(!valid) {
           return reply(Boom.unauthorized('Invalid credentials'));
         }
-        
+
         var payload = {
           scope: ['refresh']
         }
@@ -31,6 +31,10 @@ exports.refresh = {
 };
 
 exports.access = {
+  auth: {
+    strategy: 'jwt',
+    scope: ['refresh']
+  },
   handler: function(request, reply) {
     var User = UserModel.User;
     User.findOne({ _id: request.auth.credentials.sub, active: true }, function(err, user) {
@@ -42,7 +46,7 @@ exports.access = {
         scope: user.scope
       }
 
-      var opts = { 
+      var opts = {
         subject: user._id,
         expiresInMinutes: Config.get('/jwtAuth/expiresInMinutes')
       };
@@ -52,4 +56,3 @@ exports.access = {
     });
   }
 };
-

@@ -17,10 +17,7 @@ exports.getAll = {
   description: 'Get all users',
   notes: 'Returns a list of all system users',
   tags: ['api'],
-  auth: {
-    strategy: 'jwt',
-    scope: ['admin']
-  },
+  auth: Config.get('/auth/getAll'),
   handler: function (request, reply) {
     var User = UserModel.User;
     User.find({}, function (err, user) {
@@ -34,6 +31,7 @@ exports.getOne = {
   description: 'Get a user',
   notes: 'Returns an individual user',
   tags: ['api'],
+  auth: Config.get('/auth/getOne'),
   handler: function (request, reply) {
     var User = UserModel.User;
     User.findOne({ _id: request.params.userId }, function (err, user) {
@@ -50,6 +48,7 @@ exports.create = {
   description: 'Create a user',
   notes: 'Create a single user',
   tags: ['api'],
+  auth: Config.get('/auth/create'),
   validate: {
     payload: {
       username: Joi.string().required().description('A unique username'),
@@ -77,6 +76,7 @@ exports.update = {
   description: 'Update a user',
   notes: 'Returns an updated user',
   tags: ['api'],
+  auth: Config.get('/auth/update'),
   handler: function(request, reply) {
     var User = UserModel.User;
     User.findOne({ _id: request.params.userId }, function(err, user) {
@@ -100,6 +100,7 @@ exports.delete = {
   description: 'Remove a user',
   notes: 'Returns a user deleted message',
   tags: ['api'],
+  auth: Config.get('/auth/delete'),
   handler: function(request, reply) {
       
     var User = UserModel.User;
@@ -110,7 +111,7 @@ exports.delete = {
       }
       user.remove(function(err, user) {
         if(err) return handleError(err, reply);
-        return reply({message: 'User was successfully deleted'});
+        return reply({ message: 'User was successfully deleted' });
       });
     });
   }
