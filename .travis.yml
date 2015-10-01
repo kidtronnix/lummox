@@ -6,4 +6,4 @@ node_js:
 services:
   - mongodb
 
-script: echo '//////// UNIT TESTS \n' && npm test-unit && echo '//////// INTEGRATION TESTS \n' && npm run test-integration && npm run test-lcov
+script: echo '//////// UNIT TESTS ' && npm run test-unit && echo '//////// INTEGRATION TESTS \n' && npm run test-integration && npm run test-lcov
