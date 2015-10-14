@@ -8,7 +8,8 @@ module.exports = function(grunt) {
       lab: {
         cmd: 'npm',
         args: [
-          'test'
+          'run',
+          'test-unit'
         ]
       }
     },
