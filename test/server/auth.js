@@ -1,6 +1,7 @@
 var Code = require('code');
 var Lab = require('lab');
 var Hapi = require('hapi');
+var UserModel = require('../../server/models/user');
 var lab = exports.lab = Lab.script();
 
 var describe = lab.describe;
@@ -38,7 +39,7 @@ describe('Auth plugin', function () {
       },{
         method: 'GET', path: '/tokens/access',
         config: {
-          auth: 'jwt',
+          auth: 'jwt-refresh',
           handler: function(request, reply) { return reply({ message: 'Ok' }) }
         }
       }]);
@@ -48,6 +49,8 @@ describe('Auth plugin', function () {
       });
     });
   });
+
+  describe('jwt auth strategy', function() {
 
     it('invalidates request without `Authorization` header', function (done) {
       var req = {method: 'GET', url: '/restricted' };
@@ -137,22 +140,7 @@ describe('Auth plugin', function () {
         done();
       });
     });
-
-    it('validates request using token with refresh scope for /tokens/access route', function (done) {
-      var req = {
-        method: 'GET',
-        url: '/tokens/access',
-        headers: {
-          Authorization: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NWQ3YjkwNjIzYzlkOGUwNDgyMWViODEiLCJzY29wZSI6WyJyZWZyZXNoIl0sImlhdCI6MTQ0MDIwMTI0NywiZXhwIjo0MTAyMjcyMDAwfQ.cbR9yHfkl9IGE0DSAnVmz_LEGmi86KsublmiA32NAiQ'
-        }
-      };
-      server.inject(req, function(res) {
-        expect(res.statusCode).to.equal(200);
-        expect(res.payload).to.equal(JSON.stringify({ message: 'Ok'}));
-        done();
-      });
-    });
-
+    
     it('validates request using valid token', function (done) {
       var req = {
         method: 'GET',
@@ -167,4 +155,136 @@ describe('Auth plugin', function () {
         done();
       });
     });
+  });
+
+  describe('jwt-refresh auth strategy', function() {
+    it('validates request using token with refresh scope and matching jti value', function (done) {
+      var req = {
+        method: 'GET',
+        url: '/tokens/access',
+        headers: {
+          Authorization: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NWQ3YjkwNjIzYzlkOGUwNDgyMWViODEiLCJzY29wZSI6WyJyZWZyZXNoIl0sImlhdCI6MTQ0MDIwMTI0NywianRpIjoxMjN9.3Z_kvONzz4pwVPQ5CXd7m_qOA-4zqZwaUqt4SXO3ITI'
+        }
+      };
+      var query = {};
+      var MockUserModel = {
+        findOne: function(query, cb) {
+          var user = {
+            jti : 123
+          };
+          return cb(null, user);
+        }
+      }
+      UserModel.User = MockUserModel;
+      server.inject(req, function(res) {
+        expect(res.statusCode).to.equal(200);
+        expect(res.payload).to.equal(JSON.stringify({ message: 'Ok'}));
+        done();
+      });
+    });
+    
+    it('invalidates request using token with refresh scope and not matching jti value', function (done) {
+      var req = {
+        method: 'GET',
+        url: '/tokens/access',
+        headers: {
+          Authorization: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NWQ3YjkwNjIzYzlkOGUwNDgyMWViODEiLCJzY29wZSI6WyJyZWZyZXNoIl0sImlhdCI6MTQ0MDIwMTI0NywianRpIjoxMjN9.3Z_kvONzz4pwVPQ5CXd7m_qOA-4zqZwaUqt4SXO3ITI'
+        }
+      };
+      var query = {};
+      var MockUserModel = {
+        findOne: function(query, cb) {
+          var user = {
+            jti : 'notthesame'
+          };
+          return cb(null, user);
+        }
+      }
+      UserModel.User = MockUserModel;
+      server.inject(req, function(res) {
+        expect(res.statusCode).to.equal(401);
+        expect(res.payload).to.equal(JSON.stringify({
+          statusCode: 401,
+          error: 'Unauthorized',
+          message:'Invalid credentials',
+          attributes: { error: 'Invalid credentials' }
+        }));
+        done();
+      });
+    });
+
+    it('invalidates request using token with refresh scope and error on user lookup', function (done) {
+      var req = {
+        method: 'GET',
+        url: '/tokens/access',
+        headers: {
+          Authorization: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NWQ3YjkwNjIzYzlkOGUwNDgyMWViODEiLCJzY29wZSI6WyJyZWZyZXNoIl0sImlhdCI6MTQ0MDIwMTI0NywianRpIjoxMjN9.3Z_kvONzz4pwVPQ5CXd7m_qOA-4zqZwaUqt4SXO3ITI'
+        }
+      };
+      var query = {};
+      var MockUserModel = {
+        findOne: function(query, cb) {
+          return cb(true, null);
+        }
+      }
+      UserModel.User = MockUserModel;
+      server.inject(req, function(res) {
+        expect(res.statusCode).to.equal(401);
+        expect(res.payload).to.equal(JSON.stringify({
+          statusCode: 401,
+          error: 'Unauthorized',
+          message:'Invalid credentials',
+          attributes: { error: 'Invalid credentials' }
+        }));
+        done();
+      });
+    });
+    
+    it('invalidates request using token with refresh scope and user not found', function (done) {
+      var req = {
+        method: 'GET',
+        url: '/tokens/access',
+        headers: {
+          Authorization: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NWQ3YjkwNjIzYzlkOGUwNDgyMWViODEiLCJzY29wZSI6WyJyZWZyZXNoIl0sImlhdCI6MTQ0MDIwMTI0NywianRpIjoxMjN9.3Z_kvONzz4pwVPQ5CXd7m_qOA-4zqZwaUqt4SXO3ITI'
+        }
+      };
+      var query = {};
+      var MockUserModel = {
+        findOne: function(query, cb) {
+          return cb(null, null);
+        }
+      }
+      UserModel.User = MockUserModel;
+      server.inject(req, function(res) {
+        expect(res.statusCode).to.equal(401);
+        expect(res.payload).to.equal(JSON.stringify({
+          statusCode: 401,
+          error: 'Unauthorized',
+          message:'Invalid credentials',
+          attributes: { error: 'Invalid credentials' }
+        }));
+        done();
+      });
+    });
+    
+    it('invalidates request using token without sub claim', function (done) {
+      var req = {
+        method: 'GET',
+        url: '/tokens/access',
+        headers: {
+          Authorization: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6WyJhZG1pbiJdLCJpYXQiOjE0NDAyMDEyNDcsImV4cCI6NDEwMjI3MjAwMH0.h0ILvdjoTbca7GNfKuKWLQ4zFBwx-FCk4VZLUtkFpWM'
+        }
+      };
+      server.inject(req, function(res) {
+        expect(res.statusCode).to.equal(401);
+        expect(res.payload).to.equal(JSON.stringify({
+          statusCode: 401,
+          error: 'Unauthorized',
+          message:'Invalid credentials',
+          attributes: { error: 'Invalid credentials' }
+        }));
+        done();
+      });
+    });
+  });
 });

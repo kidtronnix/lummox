@@ -5,6 +5,17 @@ var JWT = require('jsonwebtoken');
 var Bcrypt = require('bcrypt');
 var Config = require('../config/config');
 
+function generateJti()
+{
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for( var i=0; i < 10; i++ )
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+}
+
 exports.refresh = {
   handler: function(request, reply) {
     var User = UserModel.User;
@@ -17,14 +28,20 @@ exports.refresh = {
         if(!valid) {
           return reply(Boom.unauthorized('Invalid credentials'));
         }
+        var jti = generateJti();
+        user.jti = jti;
 
-        var payload = {
-          scope: ['refresh']
-        }
+        user.save(function(err, u) {
+          if (err) return reply(Boom.badImplementation());
+          var payload = {
+            scope: ['refresh'],
+            jti: jti
+          }
+          var opts = { subject: u._id };
+          var token = JWT.sign(payload, Config.get('/jwtAuth/key'), opts);
+          return reply({ token: token });
+        });
 
-        var opts = { subject: user._id };
-        var token = JWT.sign(payload, Config.get('/jwtAuth/key'), opts);
-        return reply({ token: token });
       });
     });
   }
@@ -32,7 +49,7 @@ exports.refresh = {
 
 exports.access = {
   auth: {
-    strategy: 'jwt',
+    strategy: 'jwt-refresh',
     scope: ['refresh']
   },
   handler: function(request, reply) {

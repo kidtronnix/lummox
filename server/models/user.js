@@ -17,6 +17,7 @@ var UserSchema = new Schema({
   username: { type: String, unique: true, required: true },
   email: { type: String, unique: true, required: true, set: toLower },
   password: { type: String, required: true, set: hashPassword },
+  jti: { type: String },
   scope: { type: Array },
   active: { type: Boolean, required: true },
 });

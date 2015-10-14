@@ -37,6 +37,9 @@ describe('Token controller', function () {
       
       it('handler() returns JWT with refresh scope', function (done) {
         var user = { _id: 'abc123', username: 'me', password: hash, scope: ['admin'] };
+        user.save = function(cb) {
+          return cb(null, user);
+        }
         var MockUserModel = {
           findOne: function(query, cb) {
             if(query.username === 'me' && query.active === true) {
@@ -45,7 +48,6 @@ describe('Token controller', function () {
             return cb(true, null);
           }
         };
-
         UserModel.User = MockUserModel;
         Token.refresh.handler({ payload: { username: 'me', password: pass } }, function(result) {
           expect(result).to.be.an.object();
@@ -53,8 +55,29 @@ describe('Token controller', function () {
             expect(err).to.not.exist();
             expect(decoded.sub).to.be.equal(user._id);
             expect(decoded.scope).to.only.include(['refresh']);
+            expect(decoded.jti).to.be.a.string();
             done();
           });
+        });
+      });
+
+      it('handler() returns 500 on save error', function (done) {
+        var user = { _id: 'abc123', username: 'me', password: hash, scope: ['admin'] };
+        user.save = function(cb) {
+          return cb(true, null);
+        }
+        var MockUserModel = {
+          findOne: function(query, cb) {
+            if(query.username === 'me' && query.active === true) {
+              return cb(null, user);
+            }
+            return cb(true, null);
+          }
+        };
+        UserModel.User = MockUserModel;
+        Token.refresh.handler({ payload: { username: 'me', password: pass } }, function(result) {
+          expect.badImplementation(result);
+          done();
         });
       });
       

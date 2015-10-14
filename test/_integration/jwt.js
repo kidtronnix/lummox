@@ -97,7 +97,6 @@ describe('lummox', function () {
             url: '/tokens/access',
             headers: { Authorization: body.token }
           }
-
           server.inject(req, function(res) {
             expect(res.statusCode).to.equal(200);
             var body = JSON.parse(res.payload);
