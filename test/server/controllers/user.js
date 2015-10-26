@@ -157,7 +157,7 @@ describe('User controller', function () {
         });
       });
 
-      
+
       it('handler() returns 404 on no user found', function (done) {
         var request = { params: { userId: 1 } };
         var MockUserModel = {
@@ -211,7 +211,7 @@ describe('User controller', function () {
             }
           }
         }
-        
+
         UserModel.User = MockUserModel;
         User.create.handler(request, function(result) {
           expect.badImplementation(result);
@@ -259,7 +259,7 @@ describe('User controller', function () {
           done();
         });
       });
-      
+
       it('return bad implentation on error finding user', function (done) {
         var request = { payload: { username: 'me' } };
         var MockUserModel = function(user) {
@@ -303,7 +303,7 @@ describe('User controller', function () {
         };
         var userId = 1;
 
-        var mock_db = getMockDb(null, true);      
+        var mock_db = getMockDb(null, true);
 
         var MockUserModel = {
           findOne: function(query, cb) {
@@ -321,7 +321,7 @@ describe('User controller', function () {
           done();
         });
       });
-      
+
       it('handler() returns 409 doc after username conflict', function(done) {
         var payload = {
           username: "new_me",
@@ -363,7 +363,7 @@ describe('User controller', function () {
           "message" : "E11000 duplicate key error index: test.boom.$email_1  dup key: { : 1.0 }"
         };
 
-        var mock_db = getMockDb(err); 
+        var mock_db = getMockDb(err);
 
         var MockUserModel = {
           findOne: function(query, cb) {
@@ -389,7 +389,7 @@ describe('User controller', function () {
           done();
         });
       });
-      
+
       it('handler() returns 500 when error is passed on finding', function(done) {
         var MockUserModel = {
           findOne: function(query, cb) {
@@ -403,7 +403,7 @@ describe('User controller', function () {
           done();
         });
       });
-      
+
       it('handler() returns 500 when error is passed on saving', function(done) {
         var userId = 1;
 
@@ -423,7 +423,7 @@ describe('User controller', function () {
         });
       });
     });
-    
+
     describe('delete', function() {
       it('handler() should return successfully deleted on deletion', function(done) {
         var userId = 1;
@@ -478,7 +478,7 @@ describe('User controller', function () {
           done();
         });
       });
-      
+
       it('handler() should return 404 when no user', function(done) {
         var userId = 1;
 
@@ -491,6 +491,16 @@ describe('User controller', function () {
         UserModel.User = MockUserModel;
         User.delete.handler({ params: { userId: userId }, payload: {} }, function(result) {
           expect.notFound(result);
+          done();
+        });
+      });
+    });
+
+    describe('getScopes', function() {
+      it('handler() can get configured scopes', function (done) {
+        var request = {};
+        User.getScopes.handler(request, function(result) {
+          expect(result).to.be.an.array();
           done();
         });
       });

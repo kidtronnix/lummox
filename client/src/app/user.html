@@ -1,38 +1,122 @@
-<div class="row" data-ng-controller="userCtrl">
-	<h1>Create User</h1>
-  <div class="well">
-    <div>
-      <form class="form-horizontal" name="userForm" novalidate>
-         	<div class="row col-sm-12 form-group">
-				<div class="col-sm-2">
-					<label class="control-label">User ID
-						<span ng-show="userForm.userId.$error.required" class="help-inline" style="color:red"> *</span>
-					</label>
-				</div>
-				<div class="col-sm-4 customized-form-control">
-					<input type="text" class="form-control" name="userId" ng-model="user.userId" required />
-				</div>
+<section class="wrapper site-min-height" data-ng-controller="userCtrl">
+	<h3><i class="fa fa-angle-right"></i> User Management</h3>
+
+	<div class="row mt">
+		<div class="col-lg-12">
+		<div id="user-table" style="width: 100%;"></div>
+		</div>
+	</div>
+</section>
+
+<!-- Edit User Modal -->
+<div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">Edit User</h4>
 			</div>
-			<div class="row col-sm-12 form-group">
-				<div class="col-sm-2 customized-form-control">
-					<label class="control-label">Username
-						<span ng-show="userForm.username.$error.required" class="help-inline" style="color:red"> *</span>
-					</label>
+			<div class="modal-body">
+				<div class="edit-warnings"></div>
+				<form class="form-horizontal" id="editUserForm">
+				<input type="hidden" id="rowId">
+				<div class="error-box alert alert-danger" role="alert" style="display: none;"><strong class="error-status"></strong> - <span class="error-message"></span>.</div>
+				<div class="form-group">
+					<label for="frm-userId" class="col-sm-2 control-label">User ID</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control frm-userId" placeholder="User ID" readonly>
+					</div>
 				</div>
-				<div class="col-sm-4">
-					<input type="text" class="form-control" name="username" ng-model="user.username" required />
+				<div class="form-group">
+					<label for="frm-jti" class="col-sm-2 control-label">Refresh Token ID</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control frm-jti" placeholder="Not created" readonly>
+					</div>
 				</div>
+				<div class="form-group">
+					<label for="frm-email" class="col-sm-2 control-label">Email</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control frm-email" placeholder="Email" readonly>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="username" class="col-sm-2 control-label">Username</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control frm-username" placeholder="Username">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="frm-scopes" class="col-sm-2 control-label">Scopes</label>
+					<div class="col-sm-10">
+						<select class="frm-scopes" multiple="multiple" style="width: 100%">
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="frm-active" class="col-sm-2 control-label">Active</label>
+					<div class="col-sm-1">
+						<input type="checkbox" class="form-control frm-active">
+					</div>
+				</div>
+			</form>
 			</div>
-      		<div class="row col-sm-8 col-sm-offset-3">
-				<div class="form-button-group">
-					<button class="btn btn-primary"  ng-click="submit()">Save</button>
-			
-					<button class="btn btn-primary" ng-click="reset()">Reset</button>
-					
-					<button class="btn btn-primary" ng-click="cancel_view()" >Cancel</button>
-				</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="editUser">Save changes</button>
+				<button type="button" class="btn btn-warning" id="deleteUser">Delete User</button>
 			</div>
-      </form>
-    </div>
-  </div>
+		</div>
+	</div>
+</div>
+
+<!-- Edit User Modal -->
+<div class="modal fade" id="createUserModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">Create User</h4>
+			</div>
+			<div class="modal-body">
+				<div class="edit-warnings"></div>
+				<form class="form-horizontal" id="createUserForm">
+				<input type="hidden" id="rowId">
+				<div class="error-box alert alert-danger" role="alert" style="display: none;"><strong class="error-status"></strong> - <span class="error-message"></span>.</div>
+				<div class="form-group">
+					<label for="username" class="col-sm-2 control-label">Username</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control frm-username" placeholder="Username">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="frm-email" class="col-sm-2 control-label">Email</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control frm-email" placeholder="Email">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="frm-password" class="col-sm-2 control-label">Password</label>
+					<div class="col-sm-10">
+						<input type="password" class="form-control frm-password" placeholder="Password">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="frm-scopes" class="col-sm-2 control-label">Scopes</label>
+					<div class="col-sm-10">
+						<select class="frm-scopes" multiple="multiple" style="width: 100%">
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="frm-active" class="col-sm-2 control-label">Active</label>
+					<div class="col-sm-1">
+						<input type="checkbox" class="form-control frm-active">
+					</div>
+				</div>
+			</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="createUser">Save</button>
+			</div>
+		</div>
+	</div>
 </div>

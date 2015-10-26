@@ -5,7 +5,8 @@ exports.get = {
   handler: {
     directory: {
       path: __dirname+'/../../client/src',
-      index: true
+      listing: true,
+      defaultExtension: 'html'
     }
   }
 };

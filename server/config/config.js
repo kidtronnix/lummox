@@ -16,12 +16,12 @@ var config = {
         test: 9000,
         $default: 8000
     },
-    server: { 
+    server: {
         debug: {
           $filter: 'env',
           production: false,
           test: false,
-          $default: { request: ['error'] } 
+          $default: { request: ['error'] }
         },
         connections: {
             routes: {
@@ -51,7 +51,7 @@ var config = {
       },
     },
     auth: {
-      scopes: ['admin'],
+      scopes: ['admin', 'manager'],
       getAll: {
         strategy: 'jwt',
         scope: ['admin']
@@ -65,6 +65,9 @@ var config = {
       },
       delete: {
         strategy: 'jwt'
+      },
+      getScopes: {
+        strategy: 'jwt',
       }
     },
     saltRounds: 10,

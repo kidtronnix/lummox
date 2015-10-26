@@ -54,14 +54,12 @@ exports.create = {
       username: Joi.string().required().description('A unique username'),
       email: Joi.string().email().required().description('A valid email address'),
       password: Joi.string().min(5).required().description('A password. Must be at least 5 charachters'),
-      scope: Joi.array().min(1).includes(Joi.string().valid(Config.get('/auth/scopes'))).description('Array of user scopes/permissions'),
-      active: Joi.boolean().description('A flag to see if the user is active.')
+      scope: Joi.array().min(0).includes(Joi.string().valid(Config.get('/auth/scopes'))).description('Array of user scopes'),
+      active: Joi.boolean().description('A flag to see if the user is active.').default(false)
     }
   },
   handler: function(request, reply) {
-    var payload = request.payload
-    payload.active = true;
-    var u = new UserModel.User(payload);
+    var u = new UserModel.User(request.payload);
     u.save(function(err) {
       if (err) return handleError(err, reply);
       UserModel.User.findById(u, function(err, doc) {
@@ -86,7 +84,10 @@ exports.update = {
       }
       user.username = request.payload.username;
       user.email = request.payload.email;
-      user.password = request.payload.password;
+      if(request.payload.password) {
+        user.password = request.payload.password;
+      }
+      user.scope = request.payload.scope;
       user.active = request.payload.active;
       user.save(function(err, user) {
         if (err) return handleError(err, reply);
@@ -102,7 +103,7 @@ exports.delete = {
   tags: ['api'],
   auth: Config.get('/auth/delete'),
   handler: function(request, reply) {
-      
+
     var User = UserModel.User;
     User.findOne({ _id: request.params.userId }, function(err, user) {
       if(err) return handleError(err, reply);
@@ -117,4 +118,12 @@ exports.delete = {
   }
 }
 
-
+exports.getScopes = {
+  description: 'Get user scopes',
+  notes: 'Returns an array of configured user scopes',
+  tags: ['api'],
+  auth: Config.get('/auth/getScopes'),
+  handler: function(request, reply) {
+    reply(Config.get('/auth/scopes'));
+  }
+}
