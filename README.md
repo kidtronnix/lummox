@@ -9,7 +9,7 @@ A user service designed as a microservice that is responsible for:
 - Issuing JWT refresh and access tokens.
 
 [![Build Status](https://travis-ci.org/smaxwellstewart/lummox.svg?branch=master)](https://travis-ci.org/smaxwellstewart/lummox)
-[![Coverage Status](https://coveralls.io/repos/smaxwellstewart/user-microservice/badge.svg?branch=master&service=github)](https://coveralls.io/github/smaxwellstewart/user-microservice?branch=master)
+[![Coverage Status](https://coveralls.io/repos/smaxwellstewart/lummox/badge.svg?branch=master&service=github)](https://coveralls.io/github/smaxwellstewart/lummox?branch=master)
 
 ## What does microservice mean?
 
