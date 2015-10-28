@@ -112,7 +112,7 @@
             password: $(".form-password").val(),
           }
           var refreshReq = $.ajax({
-              url: "/tokens/refresh",
+              url: "/api/v1/tokens/refresh",
               type: "POST",
               dataType:"json",
               contentType: "application/json",

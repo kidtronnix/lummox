@@ -29,6 +29,10 @@ var config = {
             }
         }
     },
+    api: {
+      prefix: '/api',
+      version: 'v1'
+    },
     mongoose: {
       url: {
         $filter: 'env',
@@ -37,7 +41,7 @@ var config = {
         $default: 'mongodb://localhost:27017/auth-service'
       }
     },
-    jwtAuth: {
+    jwt: {
       $filter: 'env',
       production: {
         key: process.env.JWT_SECRET,
@@ -51,7 +55,7 @@ var config = {
       },
     },
     auth: {
-      scopes: ['admin', 'manager'],
+      scopes: ['admin'],
       getAll: {
         strategy: 'jwt',
         scope: ['admin']
@@ -70,7 +74,9 @@ var config = {
         strategy: 'jwt',
       }
     },
-    saltRounds: 10,
+    bcrypt: {
+      saltRounds: 10,
+    },
     swaggerOptions: {
       apiVersion: Package.version,
       documentationPath: '/docs',
@@ -78,14 +84,6 @@ var config = {
       info: {
         title: 'User Microservice',
         description: 'A node mongo user service built as a plug \'n\' play microservice. Service is responsible for signup, login, and CRUD of users.'
-      }
-    },
-    jwtSigningOptions: {
-      algorithm: 'HS256',
-      expiresInMinutes: {
-        $filter: 'env',
-        production: 15,
-        $default: 24*60
       }
     }
 };

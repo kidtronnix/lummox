@@ -38,7 +38,7 @@ exports.refresh = {
             jti: jti
           }
           var opts = { subject: u._id };
-          var token = JWT.sign(payload, Config.get('/jwtAuth/key'), opts);
+          var token = JWT.sign(payload, Config.get('/jwt/key'), opts);
           return reply({ token: token });
         });
 
@@ -65,10 +65,10 @@ exports.access = {
 
       var opts = {
         subject: user._id,
-        expiresInMinutes: Config.get('/jwtAuth/expiresInMinutes')
+        expiresInMinutes: Config.get('/jwt/expiresInMinutes')
       };
 
-      var token = JWT.sign(payload, Config.get('/jwtAuth/key'), opts);
+      var token = JWT.sign(payload, Config.get('/jwt/key'), opts);
       return reply({ token: token });
     });
   }

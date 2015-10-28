@@ -19,7 +19,7 @@ var server;
 
 describe('lummox', function () {
   before(function(done) {
-  
+
     Composer(function (err, srvr) {
       server = srvr;
       expect(err).to.not.exist;
@@ -29,7 +29,7 @@ describe('lummox', function () {
       });
     });
   });
-  
+
   beforeEach(function(done) {
     db.db.collection('users').drop(function(err) {
       done();
@@ -45,7 +45,7 @@ describe('lummox', function () {
     var token = JWT.sign(payload, 'NeverShareYourSecret', opts);
     var req = {
       method: 'GET',
-      url: '/users/1',
+      url: '/api/v1/users/1',
       headers: { Authorization: token }
     }
 
@@ -54,13 +54,13 @@ describe('lummox', function () {
       done();
     });
   });
-  
+
   it('user can perform full auth workflow', function (done) {
     var username = 'me';
     var password = 'badboy4life';
     var req = {
         method: 'POST',
-        url: '/users',
+        url: '/api/v1/users',
         payload: { username: username, email: 'me@example.com', password: password, scope: ['admin'], active: true }
       };
 
@@ -76,10 +76,10 @@ describe('lummox', function () {
         expect(body.scope).to.be.array();
         expect(body.scope[0]).to.equal('admin');
         expect(body.active).to.be.true();
-        
+
         var req = {
           method: 'POST',
-          url: '/tokens/refresh',
+          url: '/api/v1/tokens/refresh',
           payload: { username: username, password: password }
         }
         server.inject(req, function(res) {
@@ -94,7 +94,7 @@ describe('lummox', function () {
 
           var req = {
             method: 'POST',
-            url: '/tokens/access',
+            url: '/api/v1/tokens/access',
             headers: { Authorization: body.token }
           }
           server.inject(req, function(res) {
@@ -105,10 +105,10 @@ describe('lummox', function () {
             expect(decoded.sub).to.be.a.string();
             expect(decoded.scope).to.be.an.array();
             expect(decoded.scope[0]).to.equal('admin');
-            
+
             var req = {
               method: 'GET',
-              url: '/users',
+              url: '/api/v1/users',
               headers: { Authorization: body.token }
             }
 

@@ -12,20 +12,18 @@ app.controller('userCtrl', [ '$scope', '$http','$location', 'growl', 'UserServic
 			$('.frm-scopes').append(' <option value="'+scope+'">'+scope+'</option>')
 		}
 		$('.frm-scopes').select2();
-	});
-	var claimsBase64 = localStorage.getItem('accessToken').split('.')[1];
-	var claims = {}
-	try {
-		claims = JSON.parse(atob(claimsBase64));
-	} catch (e) {
-	   console.log('Error retreiving profile');
-		 console.error(e);
-	}
 
-	UserService.getOne(claims.sub, function(err, response) {
-		if(err) return;
-		$('.user-username').html(response.data.username);
+		var claimsBase64 = localStorage.getItem('accessToken').split('.')[1];
+		var claims = {};
+		claims = JSON.parse(atob(claimsBase64));
+
+		UserService.getOne(claims.sub, function(err, response) {
+			if(err) return;
+			$('.user-username').html(response.data.username);
+		});
 	});
+
+
 
 
 	UserService.getAll(function(err, response) {

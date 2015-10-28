@@ -1,0 +1,34 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content=""><meta name="author" content="Dashboard"><meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina"><title>lummox | login</title><link href="dashgum/assets/css/bootstrap.css" rel="stylesheet"><link href="dashgum/assets/font-awesome/css/font-awesome.css" rel="stylesheet"><link href="dashgum/assets/css/style.css" rel="stylesheet"><link href="dashgum/assets/css/style-responsive.css" rel="stylesheet"><!--[if lt IE 9]><script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script><![endif]--></head><body><div id="login-page"><div class="container"><form class="form-login"><h2 class="form-login-heading">sign in now</h2><div class="login-wrap"><input type="text" class="form-control form-username" placeholder="Username or Email" autofocus><br><input type="password" class="form-control form-password" placeholder="Password"><label class="checkbox"></label><button class="btn btn-theme btn-block" href="index.html" type="submit"><i class="fa fa-lock"></i> SIGN IN</button></div><div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="myModal" class="modal fade"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title">Forgot Password ?</h4></div><div class="modal-body"><p>Enter your e-mail address below to reset your password.</p><input type="text" name="email" placeholder="Email" autocomplete="off" class="form-control placeholder-no-fix"></div><div class="modal-footer"><button data-dismiss="modal" class="btn btn-default" type="button">Cancel</button> <button class="btn btn-theme" type="button">Submit</button></div></div></div></div></form></div></div><script src="dashgum/assets/js/jquery.js"></script><script src="dashgum/assets/js/bootstrap.min.js"></script><script src="notify/notify.js"></script><script type="text/javascript" src="dashgum/assets/js/jquery.backstretch.min.js"></script><script>$.backstretch("dashgum/assets/img/login-bg.jpg", {speed: 500});
+
+        if(localStorage.getItem("refreshToken")) {
+          window.location = "/";
+        }
+        $( ".form-login" ).submit(function( event ) {
+          event.preventDefault();
+
+          var payload = {
+            username: $(".form-username").val(),
+            password: $(".form-password").val(),
+          }
+          var refreshReq = $.ajax({
+              url: "/api/v1/tokens/refresh",
+              type: "POST",
+              dataType:"json",
+              contentType: "application/json",
+              data: JSON.stringify(payload)
+          });
+
+          refreshReq.done(function (response, textStatus, jqXHR) {
+            localStorage.setItem("refreshToken", response.token);
+            console.log("Refresh Token", response.token);
+            $.notify("Login successful", "success");
+            window.location = "/";
+          });
+
+          refreshReq.fail(function (jqXHR, textStatus, errorThrown) {
+            var response = jqXHR.responseJSON;
+            $.notify(response.error +" - "+response.message, "error");
+          });
+
+        });</script></body></html>

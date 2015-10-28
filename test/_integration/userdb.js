@@ -38,7 +38,7 @@ describe('lummox', function () {
   it('doesn\'t register a user with bad payload', function (done) {
       var req = {
         method: 'POST',
-        url: '/users',
+        url: '/api/v1/users',
         payload: {}
       };
 
@@ -57,7 +57,7 @@ describe('lummox', function () {
   it('registers a user', function (done) {
       var req = {
         method: 'POST',
-        url: '/users',
+        url: '/api/v1/users',
         payload: { username: 'me', email: 'ME@example.com', password: 'okedoke' }
       };
 

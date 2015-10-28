@@ -9,7 +9,7 @@ function toLower (v) {
 }
 
 function hashPassword (v) {
-  var salt = Bcrypt.genSaltSync(Config.get('/saltRounds'));
+  var salt = Bcrypt.genSaltSync(Config.get('/bcrypt/saltRounds'));
   return Bcrypt.hashSync(v, salt);
 }
 

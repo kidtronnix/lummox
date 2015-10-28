@@ -2,10 +2,9 @@ app.factory('UserService', function($http) {
   var self = {};
   var attempts = 0;
   var getAccessToken = function(cb) {
-    var req = $http({ url: '/tokens/access', method: 'POST', headers: { Authorization: localStorage.getItem('refreshToken') } });
+    var req = $http({ url: '/api/v1/tokens/access', method: 'POST', headers: { Authorization: localStorage.getItem('refreshToken') } });
     req.success(function(token, status, headers, config) {
       localStorage.setItem('accessToken', token.token);
-      console.log('Access token', token.token);
       attempts = 0;
       cb();
     })
@@ -16,13 +15,11 @@ app.factory('UserService', function($http) {
 
       if(status == 401) {
         localStorage.removeItem("refreshToken")
-        console.log('BAD REFRESH TOKEN');
         window.location = '/login';
         return;
       }
       if (attempts > 5) {
         $.notify("Error generating access token","error");
-        localStorage.removeItem("refreshToken");
         window.location = '/login';
         return;
       }
@@ -31,7 +28,7 @@ app.factory('UserService', function($http) {
   }
 
   self.getOne = function(id, cb) {
-		var req = $http.get('/users/'+id, { headers: { Authorization: localStorage.getItem('accessToken')  } });
+		var req = $http.get('/api/v1/users/'+id, { headers: { Authorization: localStorage.getItem('accessToken')  } });
 		req.success(function(user, status, headers, config) {
 			user.createdAt = dateFromObjectId(user._id);
 			user.scope = user.scope.join(' - ');
@@ -48,7 +45,7 @@ app.factory('UserService', function($http) {
   }
 
   self.getAll = function(cb) {
-		var req = $http.get('/users', { headers: { Authorization: localStorage.getItem('accessToken')  } });
+		var req = $http.get('/api/v1/users', { headers: { Authorization: localStorage.getItem('accessToken')  } });
 		req.success(function(users, status, headers, config) {
 			var len = users.length;
 			for(var i = 0; i < len; i++) {
@@ -68,7 +65,7 @@ app.factory('UserService', function($http) {
   }
 
 	self.getScopes = function(cb) {
-		var req = $http.get('/users/scopes', { headers: { Authorization: localStorage.getItem('accessToken')  } });
+		var req = $http.get('/api/v1/users/scopes', { headers: { Authorization: localStorage.getItem('accessToken')  } });
     req.success(function(scopes, status, headers, config) {
       cb(null, { statusCode: status, data: scopes });
     })
@@ -83,7 +80,7 @@ app.factory('UserService', function($http) {
 	}
 
 	self.create = function(payload, cb) {
-		var req = $http.post('/users', payload, { headers: { Authorization: localStorage.getItem('accessToken')  } });
+		var req = $http.post('/api/v1/users', payload, { headers: { Authorization: localStorage.getItem('accessToken')  } });
 		req.success(function(user, status, headers, config) {
 			user.createdAt = dateFromObjectId(user._id);
 			user.scope =	user.scope.join(' - ');
@@ -100,7 +97,7 @@ app.factory('UserService', function($http) {
 	}
 
 	self.update = function(id, payload, cb) {
-		var req = $http.put('/users/'+id, payload, { headers: { Authorization: localStorage.getItem('accessToken')  } });
+		var req = $http.put('/api/v1/users/'+id, payload, { headers: { Authorization: localStorage.getItem('accessToken')  } });
 		req.success(function(user, status, headers, config) {
 			user.scope =	user.scope.join(' - ');
 			cb(null, { statusCode: status, data: user });
@@ -116,7 +113,7 @@ app.factory('UserService', function($http) {
 	}
 
 	self.delete = function(id, cb) {
-		var req = $http.delete('/users/'+id, { headers: { Authorization: localStorage.getItem('accessToken')  } });
+		var req = $http.delete('/api/v1/users/'+id, { headers: { Authorization: localStorage.getItem('accessToken')  } });
 		req.success(function(msg, status, headers, config) {
 			cb(null, { statusCode: status, data: msg });
 		})

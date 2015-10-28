@@ -19,8 +19,8 @@ var manifest = {
         'hapi-swagger': Config.get('/swaggerOptions'),
         'hapi-auth-jwt2': {},
         './auth': {
-          key: Config.get('/jwtAuth/key'),
-          verifyOptions: Config.get('/jwtAuth/verifyOptions')
+          key: Config.get('/jwt/key'),
+          verifyOptions: Config.get('/jwt/verifyOptions')
         }
     }
 };
