@@ -176,6 +176,10 @@ heroku config:set JWT_SECRET=changeme
 git push heroku master
 ```
 
+### Hardening
+
+Once deployed rate limiting the token routes is a good idea to protect against denial of service attacks and limit the amount of access tokens being generated.
+
 ## How to Use with Other Services
 
 Other services can be authenticated without need for a db lookup. The JSON web tokens are used to transmit claims about a user.
@@ -183,11 +187,6 @@ Other services can be authenticated without need for a db lookup. The JSON web t
 There is definitely a catch to this model, which is that session info embedded in your JSON Web Token is limited in size. You can store a useful amount of data but they shouldn't be too huge. A way to get around this for services which need more session is to have another service like a session/profile service to return extra data about a user, this can increase latency by adding another round trip.
 
 As always understand your use case and what this solution offers before implementing anything.
-
-
-### Hardening
-
-Once deployed rate limiting the token routes is a good idea to protect against denial of service attacks and limit the amount of access tokens being generated.
 
 ## Stack: HAM
 
