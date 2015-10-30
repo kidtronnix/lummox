@@ -33,13 +33,11 @@ var config = {
       prefix: '/api',
       version: 'v1'
     },
-    mongoose: {
-      url: {
-        $filter: 'env',
-        production: process.env.MONGO_URI,
-        test: 'mongodb://localhost:27017/auth-service-test',
-        $default: 'mongodb://localhost:27017/auth-service'
-      }
+    mongoUri: {
+      $filter: 'env',
+      production: process.env.MONGO_URI,
+      test: 'mongodb://localhost:27017/lummox-test',
+      $default: 'mongodb://localhost:27017/lummox'
     },
     jwt: {
       $filter: 'env',
@@ -74,16 +72,14 @@ var config = {
         strategy: 'jwt',
       }
     },
-    bcrypt: {
-      saltRounds: 10,
-    },
+    saltRounds: 10,
     swaggerOptions: {
       apiVersion: Package.version,
       documentationPath: '/docs',
       endpoint: '/api/specs',
       info: {
-        title: 'User Microservice',
-        description: 'A node mongo user service built as a plug \'n\' play microservice. Service is responsible for signup, login, and CRUD of users.'
+        title: 'Lummox',
+        description: 'A user service designed for SOA systems.'
       }
     }
 };
