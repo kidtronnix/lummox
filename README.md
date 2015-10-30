@@ -1,6 +1,7 @@
+<img alt="logo" align="right" src="https://raw.github.com/smaxwellstewart/lummox/master/images/logo.png" />
+
 <img alt="lummox" src="https://raw.github.com/smaxwellstewart/lummox/master/images/lummox.png" />
 
-<img alt="logo" align="right" src="https://raw.github.com/smaxwellstewart/lummox/master/images/logo.png" />
 **version:** (in dev) <br/>
 **dev board:** [https://trello.com/b/KDHJ89EQ](https://trello.com/b/KDHJ89EQ)
 
