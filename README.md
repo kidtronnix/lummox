@@ -189,8 +189,6 @@ As always understand your use case and what this solution offers before implemen
 
 Once deployed rate limiting the token routes is a good idea to protect against denial of service attacks and limit the amount of access tokens being generated.
 
- <!-- Another idea is to add a cache to the access token route to achieve a similar effect. -->
-
 ## Stack: HAM
 
 **H is for Hapi** - Hapi is an awesome node.js framework for creating robust APIs.
