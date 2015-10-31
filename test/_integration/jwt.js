@@ -104,7 +104,7 @@ describe('lummox', function () {
             var decoded = JWT.verify(body.token, 'NeverShareYourSecret');
             expect(decoded.sub).to.be.a.string();
             expect(decoded.scope).to.be.an.array();
-            expect(decoded.scope[0]).to.equal('admin');
+            expect(decoded.scope).to.include('admin');
 
             var req = {
               method: 'GET',

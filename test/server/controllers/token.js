@@ -34,7 +34,7 @@ describe('Token controller', function () {
       var pass = 'password123';
       var salt = Bcrypt.genSaltSync(1);
       var hash = Bcrypt.hashSync(pass, salt);
-      
+
       it('handler() returns JWT with refresh scope', function (done) {
         var user = { _id: 'abc123', username: 'me', password: hash, scope: ['admin'] };
         user.save = function(cb) {
@@ -80,7 +80,7 @@ describe('Token controller', function () {
           done();
         });
       });
-      
+
       it('handler() returns 401 with bad username', function (done) {
         Token.refresh.handler({ payload: { username: 'noUser'} }, function(result) {
           expect.unauthorized(result, 'Invalid credentials');
@@ -98,16 +98,16 @@ describe('Token controller', function () {
             return cb(true, null);
           }
         };
-        
+
         Token.refresh.handler({ payload: { username: 'me', password: 'wrong' } }, function(result) {
           expect.unauthorized(result, 'Invalid credentials');
           done();
         });
       });
     });
-    
+
     describe('access', function() {
-      it('handler() returns JWT access token with good refresh token', function(done) {
+      it('handler() returns JWT access token with valid refresh token', function(done) {
         var user = { _id: 'abc123', username: 'me', scope: ['admin'] };
         var MockUserModel = {
           findOne: function(query, cb) {
@@ -124,7 +124,8 @@ describe('Token controller', function () {
           JWT.verify(result.token, 'NeverShareYourSecret',{}, function(err, decoded) {
             expect(err).to.not.exist();
             expect(decoded.sub).to.be.equal(user._id);
-            expect(decoded.scope).to.only.include(['admin']);
+            expect(decoded.scope).to.include(['user-'+user._id]);
+            expect(decoded.scope).to.include(['admin']);
             var exp = new Date(decoded.exp*1000);
             var now = new Date();
             expect(exp.getTime() - now.getTime()).to.be.about(4*60*60*1000, 1000);
@@ -132,14 +133,14 @@ describe('Token controller', function () {
           });
         });
       });
-      
+
       it('handler() returns 401 when user not found', function (done) {
         var MockUserModel = {
           findOne: function(query, cb) {
             return cb(null, null);
           }
         };
-        
+
         UserModel.User = MockUserModel;
         Token.access.handler({ auth: { credentials: { sub: 2 } } }, function(result) {
           expect.unauthorized(result, 'User not found');

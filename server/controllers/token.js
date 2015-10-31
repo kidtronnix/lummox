@@ -59,6 +59,8 @@ exports.access = {
         return reply(Boom.unauthorized('User not found'));
       }
 
+      user.scope.push('user-'+user._id);
+
       var payload = {
         scope: user.scope
       }

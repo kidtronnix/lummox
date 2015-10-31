@@ -51,25 +51,25 @@ The following options can be configured in `server/config/config.js`:
 
 ### Users
 
-**GET** /[prefix]/[version]/users - Get all user's in system.
+**GET** /*prefix*/*version*/users - Get all user's in system.
 
-**GET** /[prefix]/[version]/users/{id} - Get a single user in the system.
+**GET** /*prefix*/*version*/users/{id} - Get a single user in the system.
 
-**POST** /[prefix]/[version]/users - Create a user.
+**POST** /*prefix*/*version*/users - Create a user.
 
-**PUT** /[prefix]/[version]/users/{id} - Update a user in the system.
+**PUT** /*prefix*/*version*/users/{id} - Update a user in the system.
 
-**DELETE** /[prefix]/[version]/users/{id} - Delete a user in the system.
+**DELETE** /*prefix*/*version*/users/{id} - Delete a user in the system.
 
 ### Scopes
 
-**GET** /[prefix]/[version]/users/scopes - Get all allowed user scopes.
+**GET** /*prefix*/*version*/users/scopes - Get all allowed user scopes.
 
 ### Tokens
 
-**POST** /[prefix]/[version]/tokens/refresh - Create a new refresh token.
+**POST** /*prefix*/*version*/tokens/refresh - Create a new refresh token.
 
-**POST** /[prefix]/[version]/tokens/access - Create a new refresh token.
+**POST** /*prefix*/*version*/tokens/access - Create a new refresh token.
 
 ## Authentication Workflow
 
