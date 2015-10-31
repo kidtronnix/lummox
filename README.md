@@ -69,7 +69,7 @@ The following options can be configured in `server/config/config.js`:
 
 **POST** /*prefix*/*version*/tokens/refresh - Create a new refresh token.
 
-**POST** /*prefix*/*version*/tokens/access - Create a new refresh token.
+**POST** /*prefix*/*version*/tokens/access - Create a new access token.
 
 ## Authentication Workflow
 
