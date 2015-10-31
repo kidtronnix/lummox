@@ -60,16 +60,20 @@ var config = {
       },
       getOne: {
         strategy: 'jwt',
+        scope: ['admin', 'user-{params.userId}']
       },
       create: false,
       update: {
-        strategy: 'jwt'
+        strategy: 'jwt',
+        scope: ['admin', 'user-{params.userId}']
       },
       delete: {
-        strategy: 'jwt'
+        strategy: 'jwt',
+        scope: ['admin', 'user-{params.userId}']
       },
       getScopes: {
         strategy: 'jwt',
+        scope: ['admin']
       }
     },
     saltRounds: 10,
