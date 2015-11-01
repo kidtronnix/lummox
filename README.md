@@ -195,3 +195,9 @@ As always understand your use case and what this solution offers before implemen
 **A is for Angular** - Angular is a great way to quickly build powerful frontend applications.
 
 **M is for MongoDB** - Mongo is a great NoSQL database that handles JSON natively, perfect fit for Node.js projects.
+
+## Contributors
+
+Simon Maxwell-Stewart - Development
+Jenna Enman - Artwork
+Carlos Alvarez - Theme
