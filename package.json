@@ -1,6 +1,7 @@
 {
   "name": "lummox",
   "description": "A user microservice.",
+  "repository": "git://github.com/smaxwellstewart/lummox",
   "version": "0.1.0",
   "main": "server/server.js",
   "scripts": {
@@ -47,5 +48,6 @@
     "grunt-contrib-watch": "^0.6.1",
     "grunt-run": "^0.5.2",
     "lab": "^7.1.0"
-  }
+  },
+  "license": "BSD-3-Clause"
 }

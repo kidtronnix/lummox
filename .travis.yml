@@ -1,9 +1,14 @@
 language: node_js
 
 node_js:
-  - 5.0
+  - 4.1
+  - 4
+  - 5
 
 services:
   - mongodb
 
-script: echo "\n //////// UNIT TESTS" && npm run test-unit && echo '//////// INTEGRATION TESTS' && npm run test-integration && npm run test-lcov
+script: npm test
+after_success: npm run test-lcov
+
+sudo: false
