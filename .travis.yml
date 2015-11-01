@@ -8,6 +8,11 @@ node_js:
 services:
   - mongodb
 
+before_install:
+  - sudo apt-get install build-essential
+  - sudo apt-get install gcc
+  - sudo apt-get install g++
+
 script: npm test
 after_success: npm run test-lcov
 
