@@ -56,7 +56,7 @@ describe('Auth plugin', function () {
       var req = {method: 'GET', url: '/restricted' };
       server.inject(req, function(res) {
         expect(res.statusCode).to.equal(401);
-        expect(res.payload).to.equal(JSON.stringify({ statusCode:401, error: 'Unauthorized', message:'Missing auth token' }));
+        expect(res.payload).to.equal(JSON.stringify({ statusCode:401, error: 'Unauthorized', message:'Missing authentication' }));
         done();
       });
     });
@@ -140,7 +140,7 @@ describe('Auth plugin', function () {
         done();
       });
     });
-    
+
     it('validates request using valid token', function (done) {
       var req = {
         method: 'GET',
@@ -182,7 +182,7 @@ describe('Auth plugin', function () {
         done();
       });
     });
-    
+
     it('invalidates request using token with refresh scope and not matching jti value', function (done) {
       var req = {
         method: 'GET',
@@ -239,7 +239,7 @@ describe('Auth plugin', function () {
         done();
       });
     });
-    
+
     it('invalidates request using token with refresh scope and user not found', function (done) {
       var req = {
         method: 'GET',
@@ -266,7 +266,7 @@ describe('Auth plugin', function () {
         done();
       });
     });
-    
+
     it('invalidates request using token without sub claim', function (done) {
       var req = {
         method: 'GET',

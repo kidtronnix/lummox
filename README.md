@@ -35,7 +35,7 @@ The following options can be configured in `server/config/config.js`:
 - `mongoUri` - A mongodb connection URI.
 - `jwt` - Options for configuring generating JWT tokens.
   - `key` - This is a **secret** key all tokens are signed and verified with.
-  - `expiresInMinutes` - This is the amount of minutes access tokens last for.
+  - `expiresIn` - This is the amount of minutes access tokens last for.
   - `verifyOptions` - A [jsonwebtoken](https://github.com/auth0/node-jsonwebtoken) `.verify` options object. See docs for full details.
 - `auth` - auth configuration object:
  - `scopes` - List of allowed scopes.

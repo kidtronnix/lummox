@@ -1,5 +1,3 @@
-'use strict';
-
 var Joi = require('joi'),
   Boom = require('boom'),
   Config = require('../config/config'),
@@ -54,7 +52,7 @@ exports.create = {
       username: Joi.string().required().description('A unique username'),
       email: Joi.string().email().required().description('A valid email address'),
       password: Joi.string().min(5).required().description('A password. Must be at least 5 charachters'),
-      scope: Joi.array().min(0).includes(Joi.string().valid(Config.get('/auth/scopes'))).description('Array of user scopes'),
+      scope: Joi.array().min(0).items(Joi.string().valid(Config.get('/auth/scopes'))).description('Array of user scopes'),
       active: Joi.boolean().description('A flag to see if the user is active.').default(false)
     }
   },

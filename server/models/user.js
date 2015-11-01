@@ -1,4 +1,3 @@
-'use strict';
 var Bcrypt = require('bcrypt');
 var Config = require('../config/config');
 var mongoose = require('mongoose'),

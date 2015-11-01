@@ -1,4 +1,3 @@
-'use strict';
 var Boom = require('boom');
 var UserModel = require('../models/user');
 var JWT = require('jsonwebtoken');
@@ -67,7 +66,7 @@ exports.access = {
 
       var opts = {
         subject: user._id,
-        expiresInMinutes: Config.get('/jwt/expiresInMinutes')
+        expiresIn: Config.get('/jwt/expiresIn')
       };
 
       var token = JWT.sign(payload, Config.get('/jwt/key'), opts);

@@ -47,7 +47,7 @@ describe('lummox', function () {
         expect(res.payload).to.equal(JSON.stringify({
           statusCode:400,
           error: 'Bad Request',
-          message: 'child "username" fails because [username is required]',
+          message: 'child "username" fails because ["username" is required]',
           validation: { source: 'payload', keys :['username'] }
         }));
         done();
