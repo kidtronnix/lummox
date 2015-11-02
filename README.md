@@ -198,6 +198,6 @@ As always understand your use case and what this solution offers before implemen
 
 ## Contributors
 
-Simon Maxwell-Stewart - Development
-Jenna Enman - Artwork
-Carlos Alvarez - Theme
+- Simon Maxwell-Stewart - Development
+- Jenna Enman - Artwork
+- Carlos Alvarez - Theme
