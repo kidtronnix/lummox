@@ -2,7 +2,7 @@
 
 # lummox
 
-**version:** (in dev) <br/>
+**version:** 0.1 <br/>
 **dev board:** [https://trello.com/b/KDHJ89EQ](https://trello.com/b/KDHJ89EQ)
 
 A user service designed for SOA systems.
